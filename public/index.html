@@ -133,6 +133,22 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
   .winner-podium{gap:0.5rem}
   .podium-bar{width:80px}
 }
+
+.user-detail-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
+.user-detail-wrap h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1rem}
+.user-detail-tabs{display:flex;gap:6px;margin-bottom:1.2rem}
+.user-detail-tab{padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(245,245,245,0.4);border:1px solid var(--border);background:transparent;transition:all .2s}
+.user-detail-tab.active{color:var(--white);border-color:var(--pink);background:rgba(198,44,176,0.15)}
+.detail-day-list{display:flex;flex-direction:column;gap:8px;max-height:450px;overflow-y:auto;padding-right:4px}
+.detail-day-item{background:rgba(255,255,255,0.03);border-radius:12px;overflow:hidden}
+.detail-day-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;transition:background .2s}
+.detail-day-header:hover{background:rgba(255,255,255,0.04)}
+.detail-day-date{font-size:13px;font-weight:500}
+.detail-day-total{display:flex;align-items:center;gap:8px}
+.detail-day-sets{padding:0 14px 10px;display:none}
+.detail-day-sets.open{display:block}
+.detail-set-line{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.detail-set-line:last-child{border-bottom:none}
 </style>
 </head>
 <body>
@@ -236,6 +252,15 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
         <div class="cal-legend-item"><div class="cal-dot" style="background:rgba(238,28,37,0.3)"></div>Kein Eintrag</div>
         <div class="cal-legend-item"><div class="cal-dot" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1)"></div>Noch nicht</div>
       </div>
+    </div>
+    <div class="user-detail-wrap">
+      <h2>Satz-Details</h2>
+      <div class="user-detail-tabs">
+        <button class="user-detail-tab active" onclick="showDetailUser('flo',this)">Flo</button>
+        <button class="user-detail-tab" onclick="showDetailUser('patrick',this)">Patrick</button>
+        <button class="user-detail-tab" onclick="showDetailUser('dominik',this)">Dominik</button>
+      </div>
+      <div class="detail-day-list" id="detailDayList"><div class="loading">Lade...</div></div>
     </div>
   </div>
 </main>
@@ -584,6 +609,7 @@ async function renderDashboard() {
   }).join('');
 
   renderCalendar(calUser, allData);
+  renderDetailView(detailUser, allData);
   checkWinner(allData);
 }
 
@@ -619,6 +645,70 @@ function renderCalendar(uid, allData) {
     cells+=`<div class="cal-day future">${d.getDate()}</div>`;
   }
   document.getElementById('calGrid').innerHTML=cells;
+}
+
+let detailUser = 'flo';
+
+async function showDetailUser(uid, el) {
+  detailUser = uid;
+  document.querySelectorAll('.user-detail-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderDetailView(uid, await fetchDB());
+}
+
+function renderDetailView(uid, allData) {
+  const udata = (allData&&allData[uid])||{};
+  const elapsed = daysSince(CHALLENGE_START);
+  const u = USERS[uid];
+  const days = [];
+  for(let i=0; i<=elapsed; i++) {
+    const d = new Date(CHALLENGE_START); d.setDate(d.getDate()+i);
+    const key = d.toISOString().slice(0,10);
+    const sets = udata[key]||[];
+    if(sets.length > 0) days.push({key, sets, d});
+  }
+  days.reverse();
+
+  if(days.length === 0) {
+    document.getElementById('detailDayList').innerHTML =
+      '<p style="font-size:13px;color:rgba(245,245,245,0.3);text-align:center;padding:2rem">Noch keine Eintr\u00e4ge.</p>';
+    return;
+  }
+
+  document.getElementById('detailDayList').innerHTML = days.map(function(day,i) {
+    const total = day.sets.reduce(function(a,s){return a+s.reps;},0);
+    const hit = total >= GOAL;
+    const dateStr = day.d.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
+    const statusColor = hit ? '#B1EC04' : total>0 ? '#FBB314' : '#EE1C25';
+    const setsHtml = day.sets.map(function(s) {
+      let ts = s.time || '--:--';
+      if(s.ts) {
+        const dt = new Date(s.ts);
+        ts = dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      }
+      return '<div class="detail-set-line">'
+        + '<span style="color:#B1EC04;font-weight:600">+' + s.reps + ' Liegest\u00fctze</span>'
+        + '<span style="color:rgba(245,245,245,0.35)">' + ts + '</span>'
+        + '</div>';
+    }).join('');
+
+    return '<div class="detail-day-item">'
+      + '<div class="detail-day-header" onclick="toggleDayDetail(\'day-' + i + '\')">'
+      + '<span class="detail-day-date">' + dateStr + '</span>'
+      + '<div class="detail-day-total">'
+      + '<span style="font-family:\'Bebas Neue\',sans-serif;font-size:1.2rem;color:' + statusColor + '">' + total + '</span>'
+      + '<span style="font-size:11px;color:rgba(245,245,245,0.3)">/ 100</span>'
+      + '<span style="font-size:11px;color:rgba(245,245,245,0.35)">' + day.sets.length + ' Satz</span>'
+      + '<span style="font-size:12px;color:rgba(245,245,245,0.3)">\u25be</span>'
+      + '</div></div>'
+      + '<div class="detail-day-sets" id="day-' + i + '">' + setsHtml + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function toggleDayDetail(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
 }
 
 // Init
