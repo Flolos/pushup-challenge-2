@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PUSH365 Challenge</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2303020C'/%3E%3Ctext x='32' y='46' font-size='38' text-anchor='middle' fill='%23C62CB0'%3E💪%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -149,6 +150,22 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .detail-day-sets.open{display:block}
 .detail-set-line{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04)}
 .detail-set-line:last-child{border-bottom:none}
+
+.user-detail-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
+.user-detail-wrap h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1rem}
+.user-detail-tabs{display:flex;gap:6px;margin-bottom:1.2rem}
+.user-detail-tab{padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(245,245,245,0.4);border:1px solid var(--border);background:transparent;transition:all .2s}
+.user-detail-tab.active{color:var(--white);border-color:var(--pink);background:rgba(198,44,176,0.15)}
+.detail-day-list{display:flex;flex-direction:column;gap:8px;max-height:450px;overflow-y:auto;padding-right:4px}
+.detail-day-item{background:rgba(255,255,255,0.03);border-radius:12px;overflow:hidden}
+.detail-day-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;transition:background .2s}
+.detail-day-header:hover{background:rgba(255,255,255,0.04)}
+.detail-day-date{font-size:13px;font-weight:500}
+.detail-day-total{display:flex;align-items:center;gap:8px}
+.detail-day-sets{padding:0 14px 10px;display:none}
+.detail-day-sets.open{display:block}
+.detail-set-line{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.detail-set-line:last-child{border-bottom:none}
 </style>
 </head>
 <body>
@@ -165,15 +182,15 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 
 <div class="user-select">
   <div class="user-pill selected" onclick="selectUser('flo')" id="pill-flo">
-    <div class="avatar" style="background:rgba(198,44,176,0.3);color:#C62CB0">FL</div>
+    <img src="/flo.png" style="width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:top"/>
     <span>Flo</span>
   </div>
   <div class="user-pill" onclick="selectUser('patrick')" id="pill-patrick">
-    <div class="avatar" style="background:rgba(251,179,20,0.3);color:#FBB314">PA</div>
+    <img src="/patrick.png" style="width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:top"/>
     <span>Patrick</span>
   </div>
   <div class="user-pill" onclick="selectUser('dominik')" id="pill-dominik">
-    <div class="avatar" style="background:rgba(177,236,4,0.3);color:#B1EC04">DO</div>
+    <img src="/dominik.png" style="width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:top"/>
     <span>Dominik</span>
   </div>
 </div>
@@ -252,6 +269,15 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
         <div class="cal-legend-item"><div class="cal-dot" style="background:rgba(238,28,37,0.3)"></div>Kein Eintrag</div>
         <div class="cal-legend-item"><div class="cal-dot" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1)"></div>Noch nicht</div>
       </div>
+    </div>
+    <div class="user-detail-wrap">
+      <h2>Satz-Details</h2>
+      <div class="user-detail-tabs">
+        <button class="user-detail-tab active" onclick="showDetailUser('flo',this)">Flo</button>
+        <button class="user-detail-tab" onclick="showDetailUser('patrick',this)">Patrick</button>
+        <button class="user-detail-tab" onclick="showDetailUser('dominik',this)">Dominik</button>
+      </div>
+      <div class="detail-day-list" id="detailDayList"><div class="loading">Lade...</div></div>
     </div>
     <div class="user-detail-wrap">
       <h2>Satz-Details</h2>
@@ -384,7 +410,7 @@ function showWinnerScreen(sorted, stats) {
     const rank = sorted.indexOf(uid);
     return `<div class="podium-place ${podiumClasses[i]}">
       <div style="font-size:1.5rem">${medals[rank]}</div>
-      <div class="podium-avatar" style="background:${u.bg};color:${u.color};border-color:${u.color}">${u.initials}</div>
+      <img src="/${uid}.png" style="width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid ${u.color}"/>
       <div class="podium-name">${u.name}</div>
       <div class="podium-score">${s.goalDays} Tage · ${s.total.toLocaleString('de')} Reps</div>
       <div class="podium-bar">${rank+1}</div>
@@ -596,7 +622,7 @@ async function renderDashboard() {
     const consistency=elapsed>0?Math.round(s.goalDays/elapsed*100):0;
     return `<div class="lb-row">
       <div class="lb-rank">${medal}</div>
-      <div class="avatar" style="background:${u.bg};color:${u.color};font-size:12px;font-weight:700;flex-shrink:0;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center">${u.initials}</div>
+      <img src="/${uid}.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;object-position:top;flex-shrink:0;border:2px solid ${u.color}"/>
       <div class="lb-info">
         <div class="lb-name">${u.name}</div>
         <div class="lb-meta">${s.goalDays} Tage Ziel erreicht · ${consistency}% Consistency</div>
@@ -645,6 +671,70 @@ function renderCalendar(uid, allData) {
     cells+=`<div class="cal-day future">${d.getDate()}</div>`;
   }
   document.getElementById('calGrid').innerHTML=cells;
+}
+
+let detailUser = 'flo';
+
+async function showDetailUser(uid, el) {
+  detailUser = uid;
+  document.querySelectorAll('.user-detail-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderDetailView(uid, await fetchDB());
+}
+
+function renderDetailView(uid, allData) {
+  const udata = (allData&&allData[uid])||{};
+  const elapsed = daysSince(CHALLENGE_START);
+  const u = USERS[uid];
+  const days = [];
+  for(let i=0; i<=elapsed; i++) {
+    const d = new Date(CHALLENGE_START); d.setDate(d.getDate()+i);
+    const key = d.toISOString().slice(0,10);
+    const sets = udata[key]||[];
+    if(sets.length > 0) days.push({key, sets, d});
+  }
+  days.reverse();
+
+  if(days.length === 0) {
+    document.getElementById('detailDayList').innerHTML =
+      '<p style="font-size:13px;color:rgba(245,245,245,0.3);text-align:center;padding:2rem">Noch keine Eintr\u00e4ge.</p>';
+    return;
+  }
+
+  document.getElementById('detailDayList').innerHTML = days.map(function(day,i) {
+    const total = day.sets.reduce(function(a,s){return a+s.reps;},0);
+    const hit = total >= GOAL;
+    const dateStr = day.d.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
+    const statusColor = hit ? '#B1EC04' : total>0 ? '#FBB314' : '#EE1C25';
+    const setsHtml = day.sets.map(function(s) {
+      let ts = s.time || '--:--';
+      if(s.ts) {
+        const dt = new Date(s.ts);
+        ts = dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      }
+      return '<div class="detail-set-line">'
+        + '<span style="color:#B1EC04;font-weight:600">+' + s.reps + ' Liegest\u00fctze</span>'
+        + '<span style="color:rgba(245,245,245,0.35)">' + ts + '</span>'
+        + '</div>';
+    }).join('');
+
+    return '<div class="detail-day-item">'
+      + '<div class="detail-day-header" onclick="toggleDayDetail(\'day-' + i + '\')">'
+      + '<span class="detail-day-date">' + dateStr + '</span>'
+      + '<div class="detail-day-total">'
+      + '<span style="font-family:\'Bebas Neue\',sans-serif;font-size:1.2rem;color:' + statusColor + '">' + total + '</span>'
+      + '<span style="font-size:11px;color:rgba(245,245,245,0.3)">/ 100</span>'
+      + '<span style="font-size:11px;color:rgba(245,245,245,0.35)">' + day.sets.length + ' Satz</span>'
+      + '<span style="font-size:12px;color:rgba(245,245,245,0.3)">\u25be</span>'
+      + '</div></div>'
+      + '<div class="detail-day-sets" id="day-' + i + '">' + setsHtml + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function toggleDayDetail(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
 }
 
 let detailUser = 'flo';
