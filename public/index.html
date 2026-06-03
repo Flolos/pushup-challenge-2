@@ -417,7 +417,7 @@ function startConfetti() {
 // --- PUSH NOTIFICATIONS ---
 function initNotifications() {
   if(!('Notification' in window)) return;
-  if(Notification.permission === 'default' && !localStorage.getItem('notifDismissed')) {
+  if(Notification.permission === 'default') {
     document.getElementById('notifBanner').style.display='flex';
   }
   if(Notification.permission === 'granted') scheduleNotification();
@@ -433,7 +433,6 @@ async function requestNotifPermission() {
 }
 
 function dismissNotifBanner() {
-  localStorage.setItem('notifDismissed','1');
   document.getElementById('notifBanner').style.display='none';
 }
 
