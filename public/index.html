@@ -4,14 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PUSH365 Challenge</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2303020C'/%3E%3Ctext x='32' y='46' font-size='38' text-anchor='middle' fill='%23C62CB0'%3E💪%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2303020C'/%3E%3Ctext x='32' y='46' font-size='38' text-anchor='middle' fill='%23C62CB0'%3E%F0%9F%92%AA%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#03020C;--pink:#C62CB0;--white:#F5F5F5;--yellow:#FBB314;--lime:#B1EC04;--red:#EE1C25;
-  --card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);
-}
+:root{--bg:#03020C;--pink:#C62CB0;--white:#F5F5F5;--yellow:#FBB314;--lime:#B1EC04;--red:#EE1C25;--card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08)}
 body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
 nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(3,2,12,0.92);backdrop-filter:blur(12px);z-index:100}
 .logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;background:linear-gradient(90deg,var(--pink),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -22,7 +19,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem
 .user-pill{display:flex;align-items:center;gap:10px;padding:10px 20px;border-radius:50px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;background:var(--card);font-weight:500;font-size:14px}
 .user-pill:hover{border-color:var(--pink)}
 .user-pill.selected{border-color:var(--pink);background:rgba(198,44,176,0.15)}
-.avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.uavatar{width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:top;flex-shrink:0}
 main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .log-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:2rem}
 .log-card h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1.5rem}
@@ -87,6 +84,19 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .cal-legend{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
 .cal-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(245,245,245,0.5)}
 .cal-dot{width:10px;height:10px;border-radius:2px}
+.user-detail-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
+.user-detail-wrap h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1rem}
+.user-detail-tabs{display:flex;gap:6px;margin-bottom:1.2rem}
+.user-detail-tab{padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(245,245,245,0.4);border:1px solid var(--border);background:transparent;transition:all .2s}
+.user-detail-tab.active{color:var(--white);border-color:var(--pink);background:rgba(198,44,176,0.15)}
+.detail-day-list{display:flex;flex-direction:column;gap:8px;max-height:450px;overflow-y:auto;padding-right:4px}
+.detail-day-item{background:rgba(255,255,255,0.03);border-radius:12px;overflow:hidden}
+.detail-day-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;transition:background .2s}
+.detail-day-header:hover{background:rgba(255,255,255,0.04)}
+.detail-day-sets{padding:0 14px 10px;display:none}
+.detail-day-sets.open{display:block}
+.detail-set-line{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.detail-set-line:last-child{border-bottom:none}
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--lime);color:#0a1a00;padding:12px 24px;border-radius:12px;font-weight:600;font-size:14px;transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:999;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .status-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600}
@@ -95,83 +105,31 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .status-none{background:rgba(238,28,37,0.1);color:rgba(238,28,37,0.6);border:1px solid rgba(238,28,37,0.2)}
 .section-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:rgba(245,245,245,0.3);margin-bottom:1rem}
 .loading{text-align:center;padding:2rem;color:rgba(245,245,245,0.3);font-size:14px}
-
-/* PUSH NOTIFICATION BANNER */
 .notif-banner{background:rgba(198,44,176,0.1);border:1px solid rgba(198,44,176,0.3);border-radius:16px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 .notif-banner p{font-size:13px;color:rgba(245,245,245,0.7)}
-.notif-banner strong{color:var(--white)}
-.notif-btn{padding:8px 18px;background:var(--pink);border:none;border-radius:8px;color:var(--white);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s}
+.notif-btn{padding:8px 18px;background:var(--pink);border:none;border-radius:8px;color:var(--white);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
 .notif-btn:hover{background:#d930c0}
 .notif-dismiss{background:none;border:none;color:rgba(245,245,245,0.3);cursor:pointer;font-size:18px;padding:0 4px}
-
-/* WINNER SCREEN */
 #winnerScreen{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto}
 .winner-wrap{max-width:700px;margin:0 auto;padding:3rem 2rem;text-align:center}
 .winner-title{font-family:'Bebas Neue',sans-serif;font-size:5rem;letter-spacing:4px;background:linear-gradient(90deg,var(--pink),var(--yellow),var(--lime));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.5rem}
 .winner-sub{font-size:14px;color:rgba(245,245,245,0.4);text-transform:uppercase;letter-spacing:3px;margin-bottom:3rem}
 .winner-podium{display:flex;align-items:flex-end;justify-content:center;gap:1rem;margin-bottom:3rem}
 .podium-place{display:flex;flex-direction:column;align-items:center;gap:12px}
-.podium-avatar{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.8rem;border:3px solid}
 .podium-bar{width:100px;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:2rem;padding-top:12px}
 .podium-1 .podium-bar{height:160px;background:linear-gradient(180deg,rgba(251,179,20,0.3),rgba(251,179,20,0.1));border:1px solid rgba(251,179,20,0.4);color:var(--yellow)}
 .podium-2 .podium-bar{height:110px;background:linear-gradient(180deg,rgba(245,245,245,0.15),rgba(245,245,245,0.05));border:1px solid rgba(245,245,245,0.2);color:rgba(245,245,245,0.6)}
 .podium-3 .podium-bar{height:75px;background:linear-gradient(180deg,rgba(205,127,50,0.2),rgba(205,127,50,0.05));border:1px solid rgba(205,127,50,0.3);color:#cd7f32}
-.podium-name{font-weight:600;font-size:15px}
-.podium-score{font-size:12px;color:rgba(245,245,245,0.4)}
 .winner-msg{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:2rem;text-align:left}
 .winner-msg h3{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:1px;margin-bottom:1rem;color:var(--yellow)}
-.winner-msg p{font-size:14px;line-height:1.8;color:rgba(245,245,245,0.8);margin-bottom:0.8rem}
-.winner-msg p:last-child{margin-bottom:0}
+.winner-msg p{font-size:14px;line-height:1.8;color:rgba(245,245,245,0.8)}
 .winner-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
 .confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:199}
-
-@media(max-width:600px){
-  nav{padding:1rem}
-  main{padding:1rem 1rem 4rem}
-  .user-select{flex-direction:column;align-items:center}
-  .dashboard-grid{grid-template-columns:1fr 1fr}
-  .winner-title{font-size:3rem}
-  .winner-podium{gap:0.5rem}
-  .podium-bar{width:80px}
-}
-
-.user-detail-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
-.user-detail-wrap h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1rem}
-.user-detail-tabs{display:flex;gap:6px;margin-bottom:1.2rem}
-.user-detail-tab{padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(245,245,245,0.4);border:1px solid var(--border);background:transparent;transition:all .2s}
-.user-detail-tab.active{color:var(--white);border-color:var(--pink);background:rgba(198,44,176,0.15)}
-.detail-day-list{display:flex;flex-direction:column;gap:8px;max-height:450px;overflow-y:auto;padding-right:4px}
-.detail-day-item{background:rgba(255,255,255,0.03);border-radius:12px;overflow:hidden}
-.detail-day-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;transition:background .2s}
-.detail-day-header:hover{background:rgba(255,255,255,0.04)}
-.detail-day-date{font-size:13px;font-weight:500}
-.detail-day-total{display:flex;align-items:center;gap:8px}
-.detail-day-sets{padding:0 14px 10px;display:none}
-.detail-day-sets.open{display:block}
-.detail-set-line{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04)}
-.detail-set-line:last-child{border-bottom:none}
-
-.user-detail-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
-.user-detail-wrap h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1rem}
-.user-detail-tabs{display:flex;gap:6px;margin-bottom:1.2rem}
-.user-detail-tab{padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(245,245,245,0.4);border:1px solid var(--border);background:transparent;transition:all .2s}
-.user-detail-tab.active{color:var(--white);border-color:var(--pink);background:rgba(198,44,176,0.15)}
-.detail-day-list{display:flex;flex-direction:column;gap:8px;max-height:450px;overflow-y:auto;padding-right:4px}
-.detail-day-item{background:rgba(255,255,255,0.03);border-radius:12px;overflow:hidden}
-.detail-day-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;transition:background .2s}
-.detail-day-header:hover{background:rgba(255,255,255,0.04)}
-.detail-day-date{font-size:13px;font-weight:500}
-.detail-day-total{display:flex;align-items:center;gap:8px}
-.detail-day-sets{padding:0 14px 10px;display:none}
-.detail-day-sets.open{display:block}
-.detail-set-line{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04)}
-.detail-set-line:last-child{border-bottom:none}
+@media(max-width:600px){nav{padding:1rem}main{padding:1rem 1rem 4rem}.user-select{flex-direction:column;align-items:center}.dashboard-grid{grid-template-columns:1fr 1fr}.winner-title{font-size:3rem}}
 </style>
 </head>
 <body>
-
 <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
-
 <nav>
   <div class="logo">PUSH365</div>
   <div class="nav-tabs">
@@ -179,22 +137,17 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
     <button class="nav-tab" onclick="showTab('dashboard',this)">Dashboard</button>
   </div>
 </nav>
-
 <div class="user-select">
   <div class="user-pill selected" onclick="selectUser('flo')" id="pill-flo">
-    <img src="/flo.png" style="width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:top"/>
-    <span>Flo</span>
+    <img src="/flo.png" class="uavatar"/><span>Flo</span>
   </div>
   <div class="user-pill" onclick="selectUser('patrick')" id="pill-patrick">
-    <img src="/patrick.png" style="width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:top"/>
-    <span>Patrick</span>
+    <img src="/patrick.png" class="uavatar"/><span>Patrick</span>
   </div>
   <div class="user-pill" onclick="selectUser('dominik')" id="pill-dominik">
-    <img src="/dominik.png" style="width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:top"/>
-    <span>Dominik</span>
+    <img src="/dominik.png" class="uavatar"/><span>Dominik</span>
   </div>
 </div>
-
 <main>
   <div id="tab-log">
     <div id="notifBanner" class="notif-banner" style="display:none">
@@ -204,7 +157,6 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
         <button class="notif-dismiss" onclick="dismissNotifBanner()">×</button>
       </div>
     </div>
-
     <div class="log-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
         <h2>Heute loggen</h2>
@@ -233,7 +185,6 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
         <button class="quick-btn" onclick="quickLog(50)">50</button>
       </div>
     </div>
-
     <div class="video-card">
       <div class="video-header">
         <h3>Richtige Technik</h3>
@@ -244,7 +195,6 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
       </div>
     </div>
   </div>
-
   <div id="tab-dashboard" style="display:none">
     <p class="section-label">Gesamtübersicht · 365-Tage-Challenge ab 04.06.2026</p>
     <div class="dashboard-grid" id="statsGrid"><div class="loading">Lade Daten...</div></div>
@@ -279,19 +229,8 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
       </div>
       <div class="detail-day-list" id="detailDayList"><div class="loading">Lade...</div></div>
     </div>
-    <div class="user-detail-wrap">
-      <h2>Satz-Details</h2>
-      <div class="user-detail-tabs">
-        <button class="user-detail-tab active" onclick="showDetailUser('flo',this)">Flo</button>
-        <button class="user-detail-tab" onclick="showDetailUser('patrick',this)">Patrick</button>
-        <button class="user-detail-tab" onclick="showDetailUser('dominik',this)">Dominik</button>
-      </div>
-      <div class="detail-day-list" id="detailDayList"><div class="loading">Lade...</div></div>
-    </div>
   </div>
 </main>
-
-<!-- WINNER SCREEN -->
 <div id="winnerScreen">
   <div class="winner-wrap">
     <div class="winner-title">CHALLENGE<br>COMPLETE</div>
@@ -304,9 +243,7 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
     </div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script>
 const USERS = {
   flo:    {name:'Flo',    color:'#C62CB0', initials:'FL', bg:'rgba(198,44,176,0.3)'},
@@ -316,262 +253,226 @@ const USERS = {
 const GOAL = 100;
 const CHALLENGE_START = new Date('2026-06-04');
 const CHALLENGE_DAYS = 365;
-const NOTIF_HOUR = 18; // 18 Uhr Erinnerung
+const NOTIF_HOUR = 18;
 
 let currentUser = 'flo';
 let calUser = 'flo';
+let detailUser = 'flo';
 let cache = null;
 
-// URL-based user detection
 const path = window.location.pathname.replace('/','').toLowerCase();
-if(path === 'flo' || path === 'patrick' || path === 'dominik') currentUser = path;
+if(path==='flo'||path==='patrick'||path==='dominik') currentUser=path;
 
-function today() { return new Date().toISOString().slice(0,10); }
-function getTimeStr() { return new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
-function daysSince(date) { return Math.max(0, Math.floor((new Date()-date)/(864e5))); }
+function today(){return new Date().toISOString().slice(0,10)}
+function getTimeStr(){return new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}
+function daysSince(date){return Math.max(0,Math.floor((new Date()-date)/864e5))}
 
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2400);
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
 }
 
-// --- API ---
-async function fetchDB() {
-  try {
-    const r = await fetch('/api/data');
-    if(!r.ok) throw new Error();
-    cache = await r.json();
-    return cache;
-  } catch { return cache || {}; }
+async function fetchDB(){
+  try{const r=await fetch('/api/data');if(!r.ok)throw new Error();cache=await r.json();return cache;}
+  catch{return cache||{};}
 }
 
-async function saveUserDay(uid, dateStr, sets) {
-  try {
-    const r = await fetch('/api/data', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({user:uid, date:dateStr, sets})
-    });
-    if(!r.ok) throw new Error();
+async function saveUserDay(uid,dateStr,sets){
+  try{
+    const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user:uid,date:dateStr,sets})});
+    if(!r.ok)throw new Error();
     if(cache){if(!cache[uid])cache[uid]={};cache[uid][dateStr]=sets;}
     return true;
-  } catch { toast('Fehler beim Speichern ❌'); return false; }
+  }catch{toast('Fehler beim Speichern ❌');return false;}
 }
 
-// --- STATS (Option C: days with goal, tiebreak by total) ---
-function calcStats(allData) {
-  const stats = {};
-  for(const uid of ['flo','patrick','dominik']) {
-    const udata = allData[uid] || {};
-    let total=0, goalDays=0, bestStreak=0, cur=0;
-    const elapsed = daysSince(CHALLENGE_START);
-    for(let i=0; i<=elapsed; i++) {
-      const d = new Date(CHALLENGE_START); d.setDate(d.getDate()+i);
-      const key = d.toISOString().slice(0,10);
-      const sets = udata[key]||[];
-      const dayTotal = sets.reduce((a,s)=>a+s.reps,0);
-      total += dayTotal;
-      if(dayTotal >= GOAL) { goalDays++; cur++; bestStreak=Math.max(bestStreak,cur); }
+function calcStats(allData){
+  const stats={};
+  for(const uid of ['flo','patrick','dominik']){
+    const udata=allData[uid]||{};
+    let total=0,goalDays=0,bestStreak=0,cur=0;
+    const elapsed=daysSince(CHALLENGE_START);
+    for(let i=0;i<=elapsed;i++){
+      const d=new Date(CHALLENGE_START);d.setDate(d.getDate()+i);
+      const key=d.toISOString().slice(0,10);
+      const sets=udata[key]||[];
+      const dayTotal=sets.reduce((a,s)=>a+s.reps,0);
+      total+=dayTotal;
+      if(dayTotal>=GOAL){goalDays++;cur++;bestStreak=Math.max(bestStreak,cur);}
       else cur=0;
     }
-    stats[uid] = {total, goalDays, bestStreak};
+    stats[uid]={total,goalDays,bestStreak};
   }
   return stats;
 }
 
-function rankUsers(stats) {
-  return ['flo','patrick','dominik'].sort((a,b) => {
-    if(stats[b].goalDays !== stats[a].goalDays) return stats[b].goalDays - stats[a].goalDays;
-    return stats[b].total - stats[a].total;
+function rankUsers(stats){
+  return['flo','patrick','dominik'].sort((a,b)=>{
+    if(stats[b].goalDays!==stats[a].goalDays)return stats[b].goalDays-stats[a].goalDays;
+    return stats[b].total-stats[a].total;
   });
 }
 
-// --- WINNER CHECK ---
-function checkWinner(allData) {
-  const elapsed = daysSince(CHALLENGE_START);
-  if(elapsed < CHALLENGE_DAYS) return;
-  const stats = calcStats(allData);
-  const sorted = rankUsers(stats);
-  showWinnerScreen(sorted, stats);
+function checkWinner(allData){
+  if(daysSince(CHALLENGE_START)<CHALLENGE_DAYS)return;
+  const stats=calcStats(allData);
+  const sorted=rankUsers(stats);
+  showWinnerScreen(sorted,stats);
 }
 
-function showWinnerScreen(sorted, stats) {
+function showWinnerScreen(sorted,stats){
   document.getElementById('winnerScreen').style.display='block';
   startConfetti();
-
-  const medals = ['🥇','🥈','🥉'];
-  const podiumOrder = [sorted[1], sorted[0], sorted[2]]; // 2nd, 1st, 3rd for visual podium
-  const podiumClasses = ['podium-2','podium-1','podium-3'];
-  const elapsed = daysSince(CHALLENGE_START);
-
-  document.getElementById('winnerPodium').innerHTML = podiumOrder.map((uid,i)=>{
-    const u = USERS[uid]; const s = stats[uid];
-    const rank = sorted.indexOf(uid);
-    return `<div class="podium-place ${podiumClasses[i]}">
-      <div style="font-size:1.5rem">${medals[rank]}</div>
-      <img src="/${uid}.png" style="width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid ${u.color}"/>
-      <div class="podium-name">${u.name}</div>
-      <div class="podium-score">${s.goalDays} Tage · ${s.total.toLocaleString('de')} Reps</div>
-      <div class="podium-bar">${rank+1}</div>
-    </div>`;
+  const medals=['🥇','🥈','🥉'];
+  const podiumOrder=[sorted[1],sorted[0],sorted[2]];
+  const podiumClasses=['podium-2','podium-1','podium-3'];
+  const elapsed=daysSince(CHALLENGE_START);
+  document.getElementById('winnerPodium').innerHTML=podiumOrder.map(function(uid,i){
+    const u=USERS[uid];const s=stats[uid];const rank=sorted.indexOf(uid);
+    return '<div class="podium-place '+podiumClasses[i]+'">'
+      +'<div style="font-size:1.5rem">'+medals[rank]+'</div>'
+      +'<img src="/'+uid+'.png" style="width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid '+u.color+'"/>'
+      +'<div style="font-weight:600;font-size:15px">'+u.name+'</div>'
+      +'<div style="font-size:12px;color:rgba(245,245,245,0.4)">'+s.goalDays+' Tage · '+s.total.toLocaleString('de')+' Reps</div>'
+      +'<div class="podium-bar">'+(rank+1)+'</div>'
+      +'</div>';
   }).join('');
-
-  document.getElementById('winnerStats').innerHTML = sorted.map(uid=>{
-    const u=USERS[uid]; const s=stats[uid];
-    const consistency = elapsed>0?Math.round(s.goalDays/elapsed*100):0;
-    return `<div class="stat-card">
-      <div class="label" style="color:${u.color}">${u.name}</div>
-      <div class="value" style="color:${u.color}">${s.goalDays}</div>
-      <div class="sub">Tage Ziel erreicht · ${consistency}% Consistency</div>
-    </div>`;
+  document.getElementById('winnerStats').innerHTML=sorted.map(function(uid){
+    const u=USERS[uid];const s=stats[uid];
+    const consistency=elapsed>0?Math.round(s.goalDays/elapsed*100):0;
+    return '<div class="stat-card"><div class="label" style="color:'+u.color+'">'+u.name+'</div>'
+      +'<div class="value" style="color:'+u.color+'">'+s.goalDays+'</div>'
+      +'<div class="sub">Tage Ziel erreicht · '+consistency+'% Consistency</div></div>';
   }).join('');
-
-  const winner = USERS[sorted[0]];
-  document.getElementById('winnerText').innerHTML = `
-    <strong style="color:${winner.color}">🎉 ${winner.name} gewinnt die PUSH365 Challenge!</strong><br><br>
-    Was ihr drei in 365 Tagen geleistet habt, verdient echten Respekt. Täglich 100 Liegestütze durchzuziehen — das ist keine Selbstverständlichkeit. Jeder von euch hat bewiesen, dass Disziplin und Wille über ein ganzes Jahr aufrechtzuerhalten ist.<br><br>
-    Ob erster, zweiter oder dritter Platz — ihr alle habt gewonnen. Nicht nur an Kraft, sondern an Charakter. Diese Challenge hat euch geformt, und das zeigt sich nicht nur in den Zahlen.<br><br>
-    Auf euch drei. 💪
-  `;
+  const winner=USERS[sorted[0]];
+  document.getElementById('winnerText').innerHTML=
+    '<strong style="color:'+winner.color+'">🎉 '+winner.name+' gewinnt die PUSH365 Challenge!</strong><br><br>'
+    +'Was ihr drei in 365 Tagen geleistet habt, verdient echten Respekt. Täglich 100 Liegestütze durchzuziehen — das ist keine Selbstverständlichkeit. Jeder von euch hat bewiesen, dass Disziplin und Wille über ein ganzes Jahr aufrechtzuerhalten ist.<br><br>'
+    +'Ob erster, zweiter oder dritter Platz — ihr alle habt gewonnen. Nicht nur an Kraft, sondern an Charakter. Diese Challenge hat euch geformt, und das zeigt sich nicht nur in den Zahlen.<br><br>'
+    +'Auf euch drei. 💪';
 }
 
-// --- CONFETTI ---
-function startConfetti() {
-  const canvas = document.getElementById('confettiCanvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-  const colors = ['#C62CB0','#FBB314','#B1EC04','#EE1C25','#F5F5F5'];
-  const pieces = Array.from({length:150},()=>({
-    x: Math.random()*canvas.width, y: Math.random()*canvas.height-canvas.height,
-    w: Math.random()*10+5, h: Math.random()*6+3,
-    color: colors[Math.floor(Math.random()*colors.length)],
-    rot: Math.random()*360, vx: Math.random()*2-1, vy: Math.random()*3+2,
-    vr: Math.random()*6-3
+function startConfetti(){
+  const canvas=document.getElementById('confettiCanvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const colors=['#C62CB0','#FBB314','#B1EC04','#EE1C25','#F5F5F5'];
+  const pieces=Array.from({length:150},()=>({
+    x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,
+    w:Math.random()*10+5,h:Math.random()*6+3,
+    color:colors[Math.floor(Math.random()*colors.length)],
+    rot:Math.random()*360,vx:Math.random()*2-1,vy:Math.random()*3+2,vr:Math.random()*6-3
   }));
   let frame=0;
-  function draw() {
+  function draw(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     pieces.forEach(p=>{
-      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
-      ctx.fillStyle=p.color; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
-      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();
+      p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;
       if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width;}
     });
-    frame++;
-    if(frame<600) requestAnimationFrame(draw);
-    else ctx.clearRect(0,0,canvas.width,canvas.height);
+    frame++;if(frame<600)requestAnimationFrame(draw);else ctx.clearRect(0,0,canvas.width,canvas.height);
   }
   draw();
 }
 
-// --- PUSH NOTIFICATIONS ---
-function initNotifications() {
-  if(!('Notification' in window)) return;
-  if(Notification.permission === 'default') {
+function initNotifications(){
+  if(!('Notification' in window))return;
+  if(Notification.permission==='default'){
     document.getElementById('notifBanner').style.display='flex';
   }
-  if(Notification.permission === 'granted') scheduleNotification();
+  if(Notification.permission==='granted')scheduleNotification();
 }
 
-async function requestNotifPermission() {
-  const perm = await Notification.requestPermission();
+async function requestNotifPermission(){
+  const perm=await Notification.requestPermission();
   document.getElementById('notifBanner').style.display='none';
-  if(perm === 'granted') {
-    scheduleNotification();
-    toast('🔔 Erinnerungen aktiviert!');
-  }
+  if(perm==='granted'){scheduleNotification();toast('🔔 Erinnerungen aktiviert!');}
 }
 
-function dismissNotifBanner() {
+function dismissNotifBanner(){
   document.getElementById('notifBanner').style.display='none';
 }
 
-function scheduleNotification() {
-  const now = new Date();
-  const target = new Date();
-  target.setHours(NOTIF_HOUR, 0, 0, 0);
-  if(now > target) target.setDate(target.getDate()+1);
-  const ms = target - now;
-  setTimeout(()=>{
-    const db = cache || {};
-    const udata = db[currentUser]||{};
-    const td = today();
-    const sets = udata[td]||[];
-    const total = sets.reduce((a,s)=>a+s.reps,0);
-    if(total < GOAL) {
-      new Notification('PUSH365 💪', {
-        body: `${USERS[currentUser].name}, du hast heute erst ${total} von 100 Liegestützen! Noch ${GOAL-total} übrig.`,
-        icon: '/favicon.ico'
+function scheduleNotification(){
+  const now=new Date();const target=new Date();
+  target.setHours(NOTIF_HOUR,0,0,0);
+  if(now>target)target.setDate(target.getDate()+1);
+  setTimeout(function(){
+    const db=cache||{};const udata=db[currentUser]||{};
+    const sets=(udata[today()]||[]);
+    const total=sets.reduce((a,s)=>a+s.reps,0);
+    if(total<GOAL){
+      new Notification('PUSH365 💪',{
+        body:USERS[currentUser].name+', du hast heute erst '+total+' von 100 Liegestützen! Noch '+(GOAL-total)+' übrig.',
+        icon:'/favicon.ico'
       });
     }
-    scheduleNotification(); // reschedule for next day
-  }, ms);
+    scheduleNotification();
+  },target-now);
 }
 
-// --- UI ---
-function selectUser(uid) {
-  currentUser = uid;
+function selectUser(uid){
+  currentUser=uid;
   document.querySelectorAll('.user-pill').forEach(p=>p.classList.remove('selected'));
   document.getElementById('pill-'+uid).classList.add('selected');
   history.replaceState(null,'','/'+uid);
   renderLog();
 }
 
-function showTab(tab, el) {
+function showTab(tab,el){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('tab-log').style.display = tab==='log'?'block':'none';
-  document.getElementById('tab-dashboard').style.display = tab==='dashboard'?'block':'none';
-  if(tab==='dashboard') renderDashboard();
+  document.getElementById('tab-log').style.display=tab==='log'?'block':'none';
+  document.getElementById('tab-dashboard').style.display=tab==='dashboard'?'block':'none';
+  if(tab==='dashboard')renderDashboard();
 }
 
-async function renderLog() {
+async function renderLog(){
   document.querySelectorAll('.user-pill').forEach(p=>p.classList.remove('selected'));
   document.getElementById('pill-'+currentUser).classList.add('selected');
-  const db = await fetchDB();
-  const udata = db[currentUser]||{};
-  const td = today();
-  const sets = udata[td]||[];
-  const total = sets.reduce((a,s)=>a+s.reps,0);
-  const pct = Math.min(100,Math.round(total/GOAL*100));
-
-  document.getElementById('todayTotal').textContent = total;
-  const bar = document.getElementById('goalBar');
-  bar.style.width = pct+'%';
-  bar.style.background = pct>=100?'#B1EC04':pct>=50?'#FBB314':'#EE1C25';
-  document.getElementById('goalLabel').textContent = total>=GOAL
-    ? `✓ Tagesziel erreicht! (${total} Liegestütze)`
-    : `${total} von ${GOAL} — noch ${GOAL-total} übrig`;
-  const badge = document.getElementById('todayStatus');
-  badge.textContent = total+' / '+GOAL;
-  badge.className = 'status-badge '+(total>=GOAL?'status-done':total>0?'status-going':'status-none');
-
-  document.getElementById('setsList').innerHTML = sets.length===0
-    ? '<p style="font-size:13px;color:rgba(245,245,245,0.3);text-align:center;padding:1rem 0">Noch keine Sätze heute — los geht\'s! 💪</p>'
-    : sets.map((s,i)=>`<div class="set-item">
-        <div><span class="set-count">+${s.reps}</span><span style="font-size:13px;color:rgba(245,245,245,0.5);margin-left:6px">Liegestütze</span></div>
-        <div style="display:flex;align-items:center;gap:12px"><span class="set-time">${s.time}</span><button class="set-delete" onclick="deleteSet(${i})">×</button></div>
-      </div>`).join('');
-
+  const db=await fetchDB();
+  const udata=db[currentUser]||{};
+  const td=today();const sets=udata[td]||[];
+  const total=sets.reduce((a,s)=>a+s.reps,0);
+  const pct=Math.min(100,Math.round(total/GOAL*100));
+  document.getElementById('todayTotal').textContent=total;
+  const bar=document.getElementById('goalBar');
+  bar.style.width=pct+'%';
+  bar.style.background=pct>=100?'#B1EC04':pct>=50?'#FBB314':'#EE1C25';
+  document.getElementById('goalLabel').textContent=total>=GOAL
+    ?'✓ Tagesziel erreicht! ('+total+' Liegestütze)'
+    :total+' von '+GOAL+' — noch '+(GOAL-total)+' übrig';
+  const badge=document.getElementById('todayStatus');
+  badge.textContent=total+' / '+GOAL;
+  badge.className='status-badge '+(total>=GOAL?'status-done':total>0?'status-going':'status-none');
+  document.getElementById('setsList').innerHTML=sets.length===0
+    ?'<p style="font-size:13px;color:rgba(245,245,245,0.3);text-align:center;padding:1rem 0">Noch keine Sätze heute — los geht\'s! 💪</p>'
+    :sets.map((s,i)=>'<div class="set-item">'
+      +'<div><span class="set-count">+'+s.reps+'</span><span style="font-size:13px;color:rgba(245,245,245,0.5);margin-left:6px">Liegestütze</span></div>'
+      +'<div style="display:flex;align-items:center;gap:12px"><span class="set-time">'+s.time+'</span>'
+      +'<button class="set-delete" onclick="deleteSet('+i+')">×</button></div>'
+      +'</div>').join('');
   checkWinner(db);
 }
 
-async function logSet() {
-  const inp = document.getElementById('repsInput');
-  const reps = parseInt(inp.value);
+async function logSet(){
+  const inp=document.getElementById('repsInput');
+  const reps=parseInt(inp.value);
   if(!reps||reps<1||reps>500){toast('Ungültige Zahl 🤔');return;}
-  const btn = document.getElementById('logBtn');
-  btn.disabled=true; btn.textContent='…';
-  const db = await fetchDB();
-  const td = today();
-  const sets = [...((db[currentUser]||{})[td]||[])];
-  sets.push({reps, time:getTimeStr(), ts:Date.now()});
-  const ok = await saveUserDay(currentUser, td, sets);
-  btn.disabled=false; btn.textContent='+ Satz';
+  const btn=document.getElementById('logBtn');
+  btn.disabled=true;btn.textContent='…';
+  const db=await fetchDB();
+  const td=today();
+  const sets=[...((db[currentUser]||{})[td]||[])];
+  sets.push({reps,time:getTimeStr(),ts:Date.now()});
+  const ok=await saveUserDay(currentUser,td,sets);
+  btn.disabled=false;btn.textContent='+ Satz';
   if(ok){
     inp.value='';
-    const total = sets.reduce((a,s)=>a+s.reps,0);
+    const total=sets.reduce((a,s)=>a+s.reps,0);
     toast(total>=GOAL?'🏆 Tagesziel erreicht! '+total+' Liegestütze!':'+'+reps+' — weiter so! 💪');
     renderLog();
   }
@@ -579,12 +480,11 @@ async function logSet() {
 
 function quickLog(n){document.getElementById('repsInput').value=n;logSet();}
 
-async function deleteSet(idx) {
-  const db = await fetchDB();
-  const td = today();
-  const sets = [...((db[currentUser]||{})[td]||[])];
+async function deleteSet(idx){
+  const db=await fetchDB();const td=today();
+  const sets=[...((db[currentUser]||{})[td]||[])];
   sets.splice(idx,1);
-  await saveUserDay(currentUser, td, sets);
+  await saveUserDay(currentUser,td,sets);
   renderLog();
 }
 
@@ -592,63 +492,49 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&document.getElementById('repsInput')===document.activeElement)logSet();
 });
 
-async function renderDashboard() {
-  const allData = await fetchDB();
-  const stats = calcStats(allData);
-  const sorted = rankUsers(stats);
-  const elapsed = daysSince(CHALLENGE_START);
-  const remaining = Math.max(0, CHALLENGE_DAYS-elapsed);
-
-  document.getElementById('statsGrid').innerHTML = `
-    <div class="stat-card">
-      <div class="label">Gesamt-Liegestütze</div>
-      <div class="value" style="color:#C62CB0">${Object.values(stats).reduce((a,s)=>a+s.total,0).toLocaleString('de')}</div>
-      <div class="sub">Alle 3 Teilnehmer</div>
-    </div>
-    <div class="stat-card">
-      <div class="label">Führend</div>
-      <div class="value" style="color:#FBB314">${USERS[sorted[0]].name}</div>
-      <div class="sub">${stats[sorted[0]].goalDays} Tage Ziel erreicht</div>
-    </div>
-    <div class="stat-card">
-      <div class="label">Verbleibende Tage</div>
-      <div class="value" style="color:#B1EC04">${remaining}</div>
-      <div class="sub">Tag ${elapsed} von 365</div>
-    </div>`;
-
-  document.getElementById('lbRows').innerHTML = sorted.map((uid,i)=>{
-    const s=stats[uid]; const u=USERS[uid];
+async function renderDashboard(){
+  const allData=await fetchDB();
+  const stats=calcStats(allData);
+  const sorted=rankUsers(stats);
+  const elapsed=daysSince(CHALLENGE_START);
+  const remaining=Math.max(0,CHALLENGE_DAYS-elapsed);
+  document.getElementById('statsGrid').innerHTML=
+    '<div class="stat-card"><div class="label">Gesamt-Liegestütze</div>'
+    +'<div class="value" style="color:#C62CB0">'+Object.values(stats).reduce((a,s)=>a+s.total,0).toLocaleString('de')+'</div>'
+    +'<div class="sub">Alle 3 Teilnehmer</div></div>'
+    +'<div class="stat-card"><div class="label">Führend</div>'
+    +'<div class="value" style="color:#FBB314">'+USERS[sorted[0]].name+'</div>'
+    +'<div class="sub">'+stats[sorted[0]].goalDays+' Tage Ziel erreicht</div></div>'
+    +'<div class="stat-card"><div class="label">Verbleibende Tage</div>'
+    +'<div class="value" style="color:#B1EC04">'+remaining+'</div>'
+    +'<div class="sub">Tag '+elapsed+' von 365</div></div>';
+  document.getElementById('lbRows').innerHTML=sorted.map(function(uid,i){
+    const s=stats[uid];const u=USERS[uid];
     const medal=['🥇','🥈','🥉'][i];
     const consistency=elapsed>0?Math.round(s.goalDays/elapsed*100):0;
-    return `<div class="lb-row">
-      <div class="lb-rank">${medal}</div>
-      <img src="/${uid}.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;object-position:top;flex-shrink:0;border:2px solid ${u.color}"/>
-      <div class="lb-info">
-        <div class="lb-name">${u.name}</div>
-        <div class="lb-meta">${s.goalDays} Tage Ziel erreicht · ${consistency}% Consistency</div>
-      </div>
-      <div class="lb-score">
-        <div class="lb-total" style="color:${u.color}">${s.total.toLocaleString('de')}</div>
-        <div class="lb-streak">🔥 ${s.bestStreak} Tage Streak</div>
-      </div>
-    </div>`;
+    return '<div class="lb-row">'
+      +'<div class="lb-rank">'+medal+'</div>'
+      +'<img src="/'+uid+'.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;object-position:top;flex-shrink:0;border:2px solid '+u.color+'"/>'
+      +'<div class="lb-info"><div class="lb-name">'+u.name+'</div>'
+      +'<div class="lb-meta">'+s.goalDays+' Tage Ziel erreicht · '+consistency+'% Consistency</div></div>'
+      +'<div class="lb-score"><div class="lb-total" style="color:'+u.color+'">'+s.total.toLocaleString('de')+'</div>'
+      +'<div class="lb-streak">🔥 '+s.bestStreak+' Tage Streak</div></div></div>';
   }).join('');
-
-  renderCalendar(calUser, allData);
-  renderDetailView(detailUser, allData);
+  renderCalendar(calUser,allData);
+  renderDetailView(detailUser,allData);
   checkWinner(allData);
 }
 
-async function showCalUser(uid, el) {
+async function showCalUser(uid,el){
   calUser=uid;
   document.querySelectorAll('.cal-user-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  renderCalendar(uid, await fetchDB());
+  renderCalendar(uid,await fetchDB());
 }
 
-function renderCalendar(uid, allData) {
+function renderCalendar(uid,allData){
   const udata=(allData&&allData[uid])||{};
-  const now=new Date(); const td=today();
+  const now=new Date();const td=today();
   const elapsed=daysSince(CHALLENGE_START);
   const show=Math.min(elapsed+1,35);
   let cells='';
@@ -664,141 +550,65 @@ function renderCalendar(uid, allData) {
     else if(dayTotal>0)cls+=' partial';
     else cls+=' miss';
     if(isToday)cls+=' today-marker';
-    cells+=`<div class="${cls}" title="${key}: ${dayTotal}">${d.getDate()}</div>`;
+    cells+='<div class="'+cls+'" title="'+key+': '+dayTotal+'">'+d.getDate()+'</div>';
   }
   for(let i=1;i<=35-show;i++){
     const d=new Date(now);d.setDate(d.getDate()+i);
-    cells+=`<div class="cal-day future">${d.getDate()}</div>`;
+    cells+='<div class="cal-day future">'+d.getDate()+'</div>';
   }
   document.getElementById('calGrid').innerHTML=cells;
 }
 
-let detailUser = 'flo';
-
-async function showDetailUser(uid, el) {
-  detailUser = uid;
+async function showDetailUser(uid,el){
+  detailUser=uid;
   document.querySelectorAll('.user-detail-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  renderDetailView(uid, await fetchDB());
+  renderDetailView(uid,await fetchDB());
 }
 
-function renderDetailView(uid, allData) {
-  const udata = (allData&&allData[uid])||{};
-  const elapsed = daysSince(CHALLENGE_START);
-  const u = USERS[uid];
-  const days = [];
-  for(let i=0; i<=elapsed; i++) {
-    const d = new Date(CHALLENGE_START); d.setDate(d.getDate()+i);
-    const key = d.toISOString().slice(0,10);
-    const sets = udata[key]||[];
-    if(sets.length > 0) days.push({key, sets, d});
+function renderDetailView(uid,allData){
+  const udata=(allData&&allData[uid])||{};
+  const elapsed=daysSince(CHALLENGE_START);
+  const days=[];
+  for(let i=0;i<=elapsed;i++){
+    const d=new Date(CHALLENGE_START);d.setDate(d.getDate()+i);
+    const key=d.toISOString().slice(0,10);
+    const sets=udata[key]||[];
+    if(sets.length>0)days.push({key,sets,d});
   }
   days.reverse();
-
-  if(days.length === 0) {
-    document.getElementById('detailDayList').innerHTML =
-      '<p style="font-size:13px;color:rgba(245,245,245,0.3);text-align:center;padding:2rem">Noch keine Eintr\u00e4ge.</p>';
+  if(days.length===0){
+    document.getElementById('detailDayList').innerHTML='<p style="font-size:13px;color:rgba(245,245,245,0.3);text-align:center;padding:2rem">Noch keine Einträge.</p>';
     return;
   }
-
-  document.getElementById('detailDayList').innerHTML = days.map(function(day,i) {
-    const total = day.sets.reduce(function(a,s){return a+s.reps;},0);
-    const hit = total >= GOAL;
-    const dateStr = day.d.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
-    const statusColor = hit ? '#B1EC04' : total>0 ? '#FBB314' : '#EE1C25';
-    const setsHtml = day.sets.map(function(s) {
-      let ts = s.time || '--:--';
-      if(s.ts) {
-        const dt = new Date(s.ts);
-        ts = dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-      }
+  document.getElementById('detailDayList').innerHTML=days.map(function(day,i){
+    const total=day.sets.reduce(function(a,s){return a+s.reps;},0);
+    const hit=total>=GOAL;
+    const dateStr=day.d.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
+    const statusColor=hit?'#B1EC04':total>0?'#FBB314':'#EE1C25';
+    const setsHtml=day.sets.map(function(s){
+      let ts=s.time||'--:--';
+      if(s.ts){const dt=new Date(s.ts);ts=dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
       return '<div class="detail-set-line">'
-        + '<span style="color:#B1EC04;font-weight:600">+' + s.reps + ' Liegest\u00fctze</span>'
-        + '<span style="color:rgba(245,245,245,0.35)">' + ts + '</span>'
-        + '</div>';
+        +'<span style="color:#B1EC04;font-weight:600">+'+s.reps+' Liegestütze</span>'
+        +'<span style="color:rgba(245,245,245,0.35)">'+ts+'</span></div>';
     }).join('');
-
     return '<div class="detail-day-item">'
-      + '<div class="detail-day-header" onclick="toggleDayDetail(\'day-' + i + '\')">'
-      + '<span class="detail-day-date">' + dateStr + '</span>'
-      + '<div class="detail-day-total">'
-      + '<span style="font-family:\'Bebas Neue\',sans-serif;font-size:1.2rem;color:' + statusColor + '">' + total + '</span>'
-      + '<span style="font-size:11px;color:rgba(245,245,245,0.3)">/ 100</span>'
-      + '<span style="font-size:11px;color:rgba(245,245,245,0.35)">' + day.sets.length + ' Satz</span>'
-      + '<span style="font-size:12px;color:rgba(245,245,245,0.3)">\u25be</span>'
-      + '</div></div>'
-      + '<div class="detail-day-sets" id="day-' + i + '">' + setsHtml + '</div>'
-      + '</div>';
+      +'<div class="detail-day-header" onclick="toggleDayDetail(\'day-'+i+'\')">'
+      +'<span style="font-size:13px;font-weight:500">'+dateStr+'</span>'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+      +'<span style="font-family:\'Bebas Neue\',sans-serif;font-size:1.2rem;color:'+statusColor+'">'+total+'</span>'
+      +'<span style="font-size:11px;color:rgba(245,245,245,0.3)">/ 100</span>'
+      +'<span style="font-size:11px;color:rgba(245,245,245,0.35)">'+day.sets.length+' Satz</span>'
+      +'<span style="font-size:12px;color:rgba(245,245,245,0.3)">▾</span>'
+      +'</div></div>'
+      +'<div class="detail-day-sets" id="day-'+i+'">'+setsHtml+'</div>'
+      +'</div>';
   }).join('');
 }
 
-function toggleDayDetail(id) {
-  const el = document.getElementById(id);
-  el.classList.toggle('open');
-}
-
-let detailUser = 'flo';
-
-async function showDetailUser(uid, el) {
-  detailUser = uid;
-  document.querySelectorAll('.user-detail-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  renderDetailView(uid, await fetchDB());
-}
-
-function renderDetailView(uid, allData) {
-  const udata = (allData&&allData[uid])||{};
-  const elapsed = daysSince(CHALLENGE_START);
-  const u = USERS[uid];
-  const days = [];
-  for(let i=0; i<=elapsed; i++) {
-    const d = new Date(CHALLENGE_START); d.setDate(d.getDate()+i);
-    const key = d.toISOString().slice(0,10);
-    const sets = udata[key]||[];
-    if(sets.length > 0) days.push({key, sets, d});
-  }
-  days.reverse();
-
-  if(days.length === 0) {
-    document.getElementById('detailDayList').innerHTML =
-      '<p style="font-size:13px;color:rgba(245,245,245,0.3);text-align:center;padding:2rem">Noch keine Eintr\u00e4ge.</p>';
-    return;
-  }
-
-  document.getElementById('detailDayList').innerHTML = days.map(function(day,i) {
-    const total = day.sets.reduce(function(a,s){return a+s.reps;},0);
-    const hit = total >= GOAL;
-    const dateStr = day.d.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
-    const statusColor = hit ? '#B1EC04' : total>0 ? '#FBB314' : '#EE1C25';
-    const setsHtml = day.sets.map(function(s) {
-      let ts = s.time || '--:--';
-      if(s.ts) {
-        const dt = new Date(s.ts);
-        ts = dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-      }
-      return '<div class="detail-set-line">'
-        + '<span style="color:#B1EC04;font-weight:600">+' + s.reps + ' Liegest\u00fctze</span>'
-        + '<span style="color:rgba(245,245,245,0.35)">' + ts + '</span>'
-        + '</div>';
-    }).join('');
-
-    return '<div class="detail-day-item">'
-      + '<div class="detail-day-header" onclick="toggleDayDetail(\'day-' + i + '\')">'
-      + '<span class="detail-day-date">' + dateStr + '</span>'
-      + '<div class="detail-day-total">'
-      + '<span style="font-family:\'Bebas Neue\',sans-serif;font-size:1.2rem;color:' + statusColor + '">' + total + '</span>'
-      + '<span style="font-size:11px;color:rgba(245,245,245,0.3)">/ 100</span>'
-      + '<span style="font-size:11px;color:rgba(245,245,245,0.35)">' + day.sets.length + ' Satz</span>'
-      + '<span style="font-size:12px;color:rgba(245,245,245,0.3)">\u25be</span>'
-      + '</div></div>'
-      + '<div class="detail-day-sets" id="day-' + i + '">' + setsHtml + '</div>'
-      + '</div>';
-  }).join('');
-}
-
-function toggleDayDetail(id) {
-  const el = document.getElementById(id);
-  el.classList.toggle('open');
+function toggleDayDetail(id){
+  document.getElementById(id).classList.toggle('open');
 }
 
 // Init
