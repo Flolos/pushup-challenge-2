@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     await fetch(`${url}/set/${key}`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(JSON.stringify(value))
+      body: JSON.stringify(value)
     });
   }
 
