@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PUSH365 Challenge</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#03020C;
+  --pink:#C62CB0;
+  --white:#F5F5F5;
+  --yellow:#FBB314;
+  --lime:#B1EC04;
+  --red:#EE1C25;
+  --card:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08);
+}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(3,2,12,0.92);backdrop-filter:blur(12px);z-index:100}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;background:linear-gradient(90deg,var(--pink),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:4px}
+.nav-tab{padding:6px 16px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(245,245,245,0.5);transition:all .2s;border:none;background:transparent}
+.nav-tab.active{background:var(--pink);color:var(--white)}
+.user-select{display:flex;gap:1rem;justify-content:center;padding:2rem 2rem 1rem;flex-wrap:wrap}
+.user-pill{display:flex;align-items:center;gap:10px;padding:10px 20px;border-radius:50px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;background:var(--card);font-weight:500;font-size:14px}
+.user-pill:hover{border-color:var(--pink)}
+.user-pill.selected{border-color:var(--pink);background:rgba(198,44,176,0.15)}
+.avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
+.log-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:2rem}
+.log-card h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1.5rem;color:var(--white)}
+.today-total{display:flex;align-items:baseline;gap:8px;margin-bottom:1.5rem}
+.today-number{font-family:'Bebas Neue',sans-serif;font-size:4rem;line-height:1}
+.today-label{font-size:13px;color:rgba(245,245,245,0.5);text-transform:uppercase;letter-spacing:1px}
+.goal-bar-wrap{margin-bottom:1.5rem}
+.goal-bar-bg{height:8px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden}
+.goal-bar-fill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.goal-label{font-size:12px;color:rgba(245,245,245,0.4);margin-top:6px}
+.sets-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem}
+.set-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:10px;font-size:13px}
+.set-time{color:rgba(245,245,245,0.4);font-size:12px}
+.set-count{font-weight:600;color:var(--lime)}
+.set-delete{background:none;border:none;color:rgba(245,245,245,0.2);cursor:pointer;font-size:18px;padding:0 4px;transition:color .2s;line-height:1}
+.set-delete:hover{color:var(--red)}
+.input-row{display:flex;gap:10px;align-items:stretch}
+.reps-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:12px;color:var(--white);font-size:1.1rem;font-family:'DM Sans',sans-serif;padding:12px 16px;outline:none;transition:border-color .2s}
+.reps-input:focus{border-color:var(--pink)}
+.reps-input::placeholder{color:rgba(245,245,245,0.2)}
+.log-btn{padding:12px 28px;background:var(--pink);border:none;border-radius:12px;color:var(--white);font-weight:600;font-size:15px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.log-btn:hover{background:#d930c0;transform:translateY(-1px)}
+.log-btn:active{transform:translateY(0)}
+.log-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.quick-btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
+.quick-btn{padding:7px 14px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:rgba(245,245,245,0.6);font-size:13px;cursor:pointer;transition:all .2s}
+.quick-btn:hover{background:rgba(251,179,20,0.15);border-color:var(--yellow);color:var(--yellow)}
+.video-card{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:2rem}
+.video-header{padding:1.2rem 1.5rem;display:flex;align-items:center;gap:10px}
+.video-header h3{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px}
+.video-tag{font-size:11px;padding:3px 10px;background:rgba(238,28,37,0.2);border:1px solid rgba(238,28,37,0.4);border-radius:99px;color:var(--red);font-weight:600}
+.video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden}
+.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%}
+.dashboard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.2rem}
+.stat-card .label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(245,245,245,0.4);margin-bottom:8px}
+.stat-card .value{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;line-height:1}
+.stat-card .sub{font-size:12px;color:rgba(245,245,245,0.4);margin-top:4px}
+.leaderboard{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
+.lb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem}
+.lb-header h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px}
+.lb-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.lb-row:last-child{border-bottom:none}
+.lb-rank{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;width:28px;text-align:center}
+.rank-1{color:var(--yellow)}
+.rank-2{color:rgba(245,245,245,0.5)}
+.rank-3{color:#cd7f32}
+.lb-info{flex:1}
+.lb-name{font-weight:600;font-size:15px}
+.lb-meta{font-size:12px;color:rgba(245,245,245,0.4);margin-top:2px}
+.lb-score{text-align:right}
+.lb-total{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1}
+.lb-streak{font-size:11px;color:rgba(245,245,245,0.4);margin-top:2px}
+.cal-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
+.cal-wrap h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1rem}
+.cal-user-tabs{display:flex;gap:6px;margin-bottom:1.2rem}
+.cal-user-tab{padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(245,245,245,0.4);border:1px solid var(--border);background:transparent;transition:all .2s}
+.cal-user-tab.active{color:var(--white);border-color:var(--pink);background:rgba(198,44,176,0.15)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;cursor:default}
+.cal-day.hit{background:var(--lime);color:#0a1a00}
+.cal-day.miss{background:rgba(238,28,37,0.15);color:rgba(238,28,37,0.5)}
+.cal-day.partial{background:rgba(251,179,20,0.2);color:var(--yellow)}
+.cal-day.future{background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.15)}
+.cal-day.today-marker{box-shadow:0 0 0 2px var(--pink)}
+.cal-legend{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.cal-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(245,245,245,0.5)}
+.cal-dot{width:10px;height:10px;border-radius:2px}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--lime);color:#0a1a00;padding:12px 24px;border-radius:12px;font-weight:600;font-size:14px;transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:999;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600}
+.status-done{background:rgba(177,236,4,0.15);color:var(--lime);border:1px solid rgba(177,236,4,0.3)}
+.status-going{background:rgba(251,179,20,0.15);color:var(--yellow);border:1px solid rgba(251,179,20,0.3)}
+.status-none{background:rgba(238,28,37,0.1);color:rgba(238,28,37,0.6);border:1px solid rgba(238,28,37,0.2)}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:rgba(245,245,245,0.3);margin-bottom:1rem}
+.loading{text-align:center;padding:2rem;color:rgba(245,245,245,0.3);font-size:14px}
+.url-hint{background:rgba(177,236,4,0.08);border:1px solid rgba(177,236,4,0.2);border-radius:12px;padding:12px 16px;margin-bottom:1.5rem;font-size:13px;color:rgba(245,245,245,0.6)}
+.url-hint strong{color:var(--lime)}
+@media(max-width:600px){
+  nav{padding:1rem}
+  main{padding:1rem 1rem 4rem}
+  .user-select{flex-direction:column;align-items:center}
+  .dashboard-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">PUSH365</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showTab('log',this)">Loggen</button>
+    <button class="nav-tab" onclick="showTab('dashboard',this)">Dashboard</button>
+  </div>
+</nav>
+
+<div class="user-select" id="userSelect">
+  <div class="user-pill selected" onclick="selectUser('flo')" id="pill-flo">
+    <div class="avatar" style="background:rgba(198,44,176,0.3);color:#C62CB0">FL</div>
+    <span>Flo</span>
+  </div>
+  <div class="user-pill" onclick="selectUser('patrick')" id="pill-patrick">
+    <div class="avatar" style="background:rgba(251,179,20,0.3);color:#FBB314">PA</div>
+    <span>Patrick</span>
+  </div>
+  <div class="user-pill" onclick="selectUser('dominik')" id="pill-dominik">
+    <div class="avatar" style="background:rgba(177,236,4,0.3);color:#B1EC04">DO</div>
+    <span>Dominik</span>
+  </div>
+</div>
+
+<main>
+  <div id="tab-log">
+    <div class="log-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+        <h2>Heute loggen</h2>
+        <span id="todayStatus" class="status-badge status-none">0 / 100</span>
+      </div>
+      <div class="today-total">
+        <span class="today-number" id="todayTotal">0</span>
+        <span class="today-label">Liegestütze heute</span>
+      </div>
+      <div class="goal-bar-wrap">
+        <div class="goal-bar-bg"><div class="goal-bar-fill" id="goalBar" style="width:0%;background:#EE1C25"></div></div>
+        <div class="goal-label" id="goalLabel">0 von 100 — noch 100 übrig</div>
+      </div>
+      <div id="setsList" class="sets-list"></div>
+      <div class="input-row">
+        <input type="number" id="repsInput" class="reps-input" placeholder="Anzahl Liegestütze..." min="1" max="500" />
+        <button class="log-btn" id="logBtn" onclick="logSet()">+ Satz</button>
+      </div>
+      <div class="quick-btns">
+        <span class="section-label" style="margin:0;align-self:center">Schnell:</span>
+        <button class="quick-btn" onclick="quickLog(10)">10</button>
+        <button class="quick-btn" onclick="quickLog(15)">15</button>
+        <button class="quick-btn" onclick="quickLog(20)">20</button>
+        <button class="quick-btn" onclick="quickLog(25)">25</button>
+        <button class="quick-btn" onclick="quickLog(30)">30</button>
+        <button class="quick-btn" onclick="quickLog(50)">50</button>
+      </div>
+    </div>
+
+    <div class="video-card">
+      <div class="video-header">
+        <h3>Richtige Technik</h3>
+        <span class="video-tag">▶ TUTORIAL</span>
+      </div>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/JvX0ilRCBrU?si=eW6A6Gdwy5NoOSAe" title="Liegestütze Technik" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-dashboard" style="display:none">
+    <p class="section-label">Gesamtübersicht · 365-Tage-Challenge ab 04.06.2026</p>
+    <div class="dashboard-grid" id="statsGrid"><div class="loading">Lade Daten...</div></div>
+    <div class="leaderboard">
+      <div class="lb-header">
+        <h2>Rangliste</h2>
+        <span style="font-size:12px;color:rgba(245,245,245,0.4)">Gesamt-Liegestütze</span>
+      </div>
+      <div id="lbRows"><div class="loading">Lade Rangliste...</div></div>
+    </div>
+    <div class="cal-wrap">
+      <h2>Streak-Kalender</h2>
+      <div class="cal-user-tabs" id="calUserTabs">
+        <button class="cal-user-tab active" onclick="showCalUser('flo',this)">Flo</button>
+        <button class="cal-user-tab" onclick="showCalUser('patrick',this)">Patrick</button>
+        <button class="cal-user-tab" onclick="showCalUser('dominik',this)">Dominik</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-legend">
+        <div class="cal-legend-item"><div class="cal-dot" style="background:#B1EC04"></div>Ziel erreicht (100+)</div>
+        <div class="cal-legend-item"><div class="cal-dot" style="background:rgba(251,179,20,0.4)"></div>Teilweise</div>
+        <div class="cal-legend-item"><div class="cal-dot" style="background:rgba(238,28,37,0.3)"></div>Kein Eintrag</div>
+        <div class="cal-legend-item"><div class="cal-dot" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1)"></div>Noch nicht</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const USERS = {
+  flo:    {name:'Flo',    color:'#C62CB0', initials:'FL', bg:'rgba(198,44,176,0.3)'},
+  patrick:{name:'Patrick',color:'#FBB314', initials:'PA', bg:'rgba(251,179,20,0.3)'},
+  dominik:{name:'Dominik',color:'#B1EC04', initials:'DO', bg:'rgba(177,236,4,0.3)'}
+};
+const GOAL = 100;
+const CHALLENGE_START = new Date('2026-06-04');
+
+let currentUser = 'flo';
+let calUser = 'flo';
+let cache = null;
+
+// Detect user from URL path
+const path = window.location.pathname.replace('/','').toLowerCase();
+if(path === 'flo' || path === 'patrick' || path === 'dominik') {
+  currentUser = path;
+}
+
+function today() {
+  return new Date().toISOString().slice(0,10);
+}
+
+function getTimeStr() {
+  return new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+// --- API ---
+async function fetchDB() {
+  try {
+    const r = await fetch('/api/data');
+    if(!r.ok) throw new Error('fetch failed');
+    cache = await r.json();
+    return cache;
+  } catch(e) {
+    console.error(e);
+    return cache || {};
+  }
+}
+
+async function saveUserDay(uid, dateStr, sets) {
+  try {
+    const r = await fetch('/api/data', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({user: uid, date: dateStr, sets})
+    });
+    if(!r.ok) throw new Error('save failed');
+    if(cache) {
+      if(!cache[uid]) cache[uid] = {};
+      cache[uid][dateStr] = sets;
+    }
+    return true;
+  } catch(e) {
+    console.error(e);
+    toast('Fehler beim Speichern ❌');
+    return false;
+  }
+}
+
+// --- UI ---
+function selectUser(uid) {
+  currentUser = uid;
+  document.querySelectorAll('.user-pill').forEach(p=>p.classList.remove('selected'));
+  document.getElementById('pill-'+uid).classList.add('selected');
+  history.replaceState(null,'','/'+uid);
+  renderLog();
+}
+
+function showTab(tab, el) {
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-log').style.display = tab==='log'?'block':'none';
+  document.getElementById('tab-dashboard').style.display = tab==='dashboard'?'block':'none';
+  if(tab==='dashboard') renderDashboard();
+}
+
+async function renderLog() {
+  // Update pill selection
+  document.querySelectorAll('.user-pill').forEach(p=>p.classList.remove('selected'));
+  document.getElementById('pill-'+currentUser).classList.add('selected');
+
+  const db = await fetchDB();
+  const udata = db[currentUser] || {};
+  const td = today();
+  const sets = udata[td] || [];
+  const total = sets.reduce((a,s)=>a+s.reps, 0);
+  const pct = Math.min(100, Math.round(total/GOAL*100));
+
+  document.getElementById('todayTotal').textContent = total;
+  const bar = document.getElementById('goalBar');
+  bar.style.width = pct+'%';
+  bar.style.background = pct>=100?'#B1EC04':pct>=50?'#FBB314':'#EE1C25';
+
+  document.getElementById('goalLabel').textContent =
+    total>=GOAL ? `✓ Tagesziel erreicht! (${total} Liegestütze)`
+    : `${total} von ${GOAL} — noch ${GOAL-total} übrig`;
+
+  const badge = document.getElementById('todayStatus');
+  badge.textContent = total+' / '+GOAL;
+  badge.className = 'status-badge '+(total>=GOAL?'status-done':total>0?'status-going':'status-none');
+
+  const list = document.getElementById('setsList');
+  list.innerHTML = sets.length === 0
+    ? '<p style="font-size:13px;color:rgba(245,245,245,0.3);text-align:center;padding:1rem 0">Noch keine Sätze heute — los geht\'s! 💪</p>'
+    : sets.map((s,i)=>`
+      <div class="set-item">
+        <div>
+          <span class="set-count">+${s.reps}</span>
+          <span style="font-size:13px;color:rgba(245,245,245,0.5);margin-left:6px">Liegestütze</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="set-time">${s.time}</span>
+          <button class="set-delete" onclick="deleteSet(${i})" title="Löschen">×</button>
+        </div>
+      </div>`).join('');
+}
+
+async function logSet() {
+  const inp = document.getElementById('repsInput');
+  const reps = parseInt(inp.value);
+  if(!reps || reps<1 || reps>500){toast('Ungültige Zahl 🤔'); return;}
+
+  const btn = document.getElementById('logBtn');
+  btn.disabled = true;
+  btn.textContent = '…';
+
+  const db = await fetchDB();
+  const udata = db[currentUser] || {};
+  const td = today();
+  const sets = [...(udata[td]||[])];
+  sets.push({reps, time: getTimeStr(), ts: Date.now()});
+
+  const ok = await saveUserDay(currentUser, td, sets);
+  btn.disabled = false;
+  btn.textContent = '+ Satz';
+
+  if(ok) {
+    inp.value = '';
+    const total = sets.reduce((a,s)=>a+s.reps,0);
+    toast(total>=GOAL ? '🏆 Tagesziel erreicht! '+total+' Liegestütze!' : '+'+reps+' — weiter so! 💪');
+    renderLog();
+  }
+}
+
+function quickLog(n) {
+  document.getElementById('repsInput').value = n;
+  logSet();
+}
+
+async function deleteSet(idx) {
+  const db = await fetchDB();
+  const udata = db[currentUser] || {};
+  const td = today();
+  const sets = [...(udata[td]||[])];
+  sets.splice(idx,1);
+  await saveUserDay(currentUser, td, sets);
+  renderLog();
+}
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter' && document.getElementById('repsInput')===document.activeElement) logSet();
+});
+
+// --- DASHBOARD ---
+function daysSince(date) {
+  return Math.max(0, Math.floor((new Date()-date)/(1000*60*60*24)));
+}
+
+async function renderDashboard() {
+  const allData = await fetchDB();
+  const stats = {};
+
+  for(const uid of ['flo','patrick','dominik']) {
+    const udata = allData[uid] || {};
+    let total=0, days=0, bestStreak=0, cur=0;
+    const now = new Date();
+    const elapsed = daysSince(CHALLENGE_START);
+
+    for(let i=0; i<=elapsed; i++) {
+      const d = new Date(CHALLENGE_START);
+      d.setDate(d.getDate()+i);
+      const key = d.toISOString().slice(0,10);
+      const sets = udata[key] || [];
+      const dayTotal = sets.reduce((a,s)=>a+s.reps,0);
+      if(dayTotal>=GOAL){cur++;bestStreak=Math.max(bestStreak,cur);days++;total+=dayTotal;}
+      else{if(dayTotal>0)total+=dayTotal;cur=0;}
+    }
+    stats[uid]={total,days,bestStreak};
+  }
+
+  const totals = Object.entries(stats).sort((a,b)=>b[1].total-a[1].total);
+  const leader = totals[0];
+  const elapsed = daysSince(CHALLENGE_START);
+  const remaining = Math.max(0, 365-elapsed);
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card">
+      <div class="label">Gesamt-Liegestütze</div>
+      <div class="value" style="color:#C62CB0">${Object.values(stats).reduce((a,s)=>a+s.total,0).toLocaleString('de')}</div>
+      <div class="sub">Alle 3 Teilnehmer</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Führend</div>
+      <div class="value" style="color:#FBB314">${USERS[leader[0]].name}</div>
+      <div class="sub">${leader[1].total.toLocaleString('de')} Liegestütze</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Verbleibende Tage</div>
+      <div class="value" style="color:#B1EC04">${remaining}</div>
+      <div class="sub">Tag ${elapsed} von 365</div>
+    </div>
+  `;
+
+  const sorted = ['flo','patrick','dominik'].sort((a,b)=>stats[b].total-stats[a].total);
+  document.getElementById('lbRows').innerHTML = sorted.map((uid,i)=>{
+    const s=stats[uid]; const u=USERS[uid];
+    const medal=['🥇','🥈','🥉'][i];
+    const consistency = elapsed>0 ? Math.round(s.days/elapsed*100) : 0;
+    return `<div class="lb-row">
+      <div class="lb-rank">${medal}</div>
+      <div class="avatar" style="background:${u.bg};color:${u.color};font-size:12px;font-weight:700;flex-shrink:0;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center">${u.initials}</div>
+      <div class="lb-info">
+        <div class="lb-name">${u.name}</div>
+        <div class="lb-meta">${s.days} Tage Ziel erreicht · ${consistency}% Consistency</div>
+      </div>
+      <div class="lb-score">
+        <div class="lb-total" style="color:${u.color}">${s.total.toLocaleString('de')}</div>
+        <div class="lb-streak">🔥 ${s.bestStreak} Tage Streak</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  renderCalendar(calUser, allData);
+}
+
+async function showCalUser(uid, el) {
+  calUser = uid;
+  document.querySelectorAll('.cal-user-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const allData = await fetchDB();
+  renderCalendar(uid, allData);
+}
+
+function renderCalendar(uid, allData) {
+  const udata = (allData&&allData[uid])||{};
+  const grid = document.getElementById('calGrid');
+  const now = new Date();
+  const td = today();
+  const elapsed = daysSince(CHALLENGE_START);
+  const show = Math.min(elapsed+1, 35);
+  let cells = '';
+
+  for(let i=show-1; i>=0; i--) {
+    const d = new Date(now); d.setDate(d.getDate()-i);
+    const key = d.toISOString().slice(0,10);
+    const sets = udata[key]||[];
+    const dayTotal = sets.reduce((a,s)=>a+s.reps,0);
+    const isToday = key===td;
+    const isFuture = d > now;
+    let cls='cal-day';
+    if(isFuture) cls+=' future';
+    else if(dayTotal>=GOAL) cls+=' hit';
+    else if(dayTotal>0) cls+=' partial';
+    else cls+=' miss';
+    if(isToday) cls+=' today-marker';
+    cells+=`<div class="${cls}" title="${key}: ${dayTotal} Liegestütze">${d.getDate()}</div>`;
+  }
+
+  // Fill remaining with future
+  const fill = 35-show;
+  for(let i=1;i<=fill;i++){
+    const d=new Date(now);d.setDate(d.getDate()+i);
+    cells+=`<div class="cal-day future">${d.getDate()}</div>`;
+  }
+  grid.innerHTML=cells;
+}
+
+// Init
+renderLog();
+</script>
+</body>
+</html>
