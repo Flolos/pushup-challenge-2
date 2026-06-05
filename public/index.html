@@ -793,7 +793,7 @@ function compressImage(file, maxSize, quality) {
 function openLightbox(url) {
   const lb = document.createElement('div');
   lb.className = 'photo-lightbox';
-  lb.innerHTML = '<img src="' + url + '"/>';
+  lb.innerHTML = '<img src="/api/photo?url=' + encodeURIComponent(url) + '"/>';
   lb.onclick = () => document.body.removeChild(lb);
   document.body.appendChild(lb);
 }
