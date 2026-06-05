@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
   try {
     const blob = await get(url, {
-      token: process.env.BLOB_READ_WRITE_TOKEN
+      token: process.env.BLOB2_READ_WRITE_TOKEN
     });
 
     if (!blob) return res.status(404).json({ error: 'Not found' });
