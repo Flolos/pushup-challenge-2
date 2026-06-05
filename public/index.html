@@ -387,7 +387,7 @@ function showWinnerScreen(sorted,stats){
   }).join('');
   document.getElementById('winnerStats').innerHTML=sorted.map(function(uid){
     const u=USERS[uid];const s=stats[uid];
-    const consistency=elapsed>0?Math.round(s.goalDays/elapsed*100):0;
+    const consistency=Math.round(s.goalDays/Math.max(1,elapsed+1)*100);
     return '<div class="stat-card"><div class="label" style="color:'+u.color+'">'+u.name+'</div>'
       +'<div class="value" style="color:'+u.color+'">'+s.goalDays+'</div>'
       +'<div class="sub">Tage Ziel erreicht · '+consistency+'% Consistency</div></div>';
@@ -567,7 +567,7 @@ async function renderDashboard(){
   document.getElementById('lbRows').innerHTML=sorted.map(function(uid,i){
     const s=stats[uid];const u=USERS[uid];
     const medal=['🥇','🥈','🥉'][i];
-    const consistency=elapsed>0?Math.round(s.goalDays/elapsed*100):0;
+    const consistency=Math.round(s.goalDays/Math.max(1,elapsed+1)*100);
     const badges=getBadges(stats,uid);
     const badgeHtml=badges.map(b=>'<span class="badge '+b.cls+'">'+b.icon+' '+b.label+'</span>').join('');
     return '<div class="lb-row">'
