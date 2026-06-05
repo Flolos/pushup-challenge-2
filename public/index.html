@@ -306,7 +306,12 @@ let cache = null;
 const path = window.location.pathname.replace('/','').toLowerCase();
 if(path==='flo'||path==='patrick'||path==='dominik') currentUser=path;
 
-function today(){return new Date().toISOString().slice(0,10)}
+function today(){
+  const now = new Date();
+  const offset = now.getTimezoneOffset();
+  const local = new Date(now.getTime() - offset * 60000);
+  return local.toISOString().slice(0,10);
+}
 function getTimeStr(){return new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}
 function daysSince(date){return Math.max(0,Math.floor((new Date()-date)/864e5))}
 
@@ -793,7 +798,7 @@ function compressImage(file, maxSize, quality) {
 function openLightbox(url) {
   const lb = document.createElement('div');
   lb.className = 'photo-lightbox';
-  lb.innerHTML = '<img src="/api/photo?url=' + encodeURIComponent(url) + '"/>';
+  lb.innerHTML = '<img src="' + url + '"/>';
   lb.onclick = () => document.body.removeChild(lb);
   document.body.appendChild(lb);
 }
