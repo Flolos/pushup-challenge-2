@@ -632,9 +632,11 @@ function renderDetailView(uid,allData){
   const udata=(allData&&allData[uid])||{};
   const elapsed=daysSince(CHALLENGE_START);
   const days=[];
-  for(let i=0;i<=elapsed;i++){
+  const todayStr=today();
+  for(let i=0;i<=elapsed+1;i++){
     const d=new Date(CHALLENGE_START);d.setDate(d.getDate()+i);
     const key=d.toISOString().slice(0,10);
+    if(key>todayStr)break;
     const sets=udata[key]||[];
     if(sets.length>0)days.push({key,sets,d});
   }
