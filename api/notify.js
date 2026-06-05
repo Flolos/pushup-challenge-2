@@ -105,7 +105,7 @@ DOMINIK (München):
 BEZIEHUNG: Patrick, Dominik und Flo sind beste Freunde.
 
 ${time === 'midday'
-  ? 'MITTAGS (12 Uhr): Neutral-motivierend. Auf aktuelle Stats eingehen. Nur bei wirklich starker Leistung jemanden herausheben — nicht jedes Mal. Animiere alle.'
+  ? 'MITTAGS (12 Uhr): Neutral-motivierend. Perspektive ähnlich eines Vaters oder guten Freundes. Auf aktuelle Stats eingehen. Nur bei wirklich starker Leistung jemanden herausheben — nicht jedes Mal. Animiere alle.'
   : 'ABENDS (20 Uhr): Sarkastisch-ironisch. Fokus auf die, die noch nichts oder wenig gemacht haben. Leichte Tiefschläge erlaubt. Trotzdem motivierend am Ende. Dunkler Humor ist erwünscht.'
 }`;
 }
