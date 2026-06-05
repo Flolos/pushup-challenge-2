@@ -53,7 +53,7 @@ export default async function handler(req, res) {
 
     const blobPath = `photos/${uid}/${date}/set-${setIndex}-${Date.now()}.jpg`;
     const blob = await put(blobPath, imageBuffer, {
-      access: 'private',
+      access: 'public',
       contentType: 'image/jpeg',
       token: process.env.BLOB2_READ_WRITE_TOKEN
     });
