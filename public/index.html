@@ -147,6 +147,15 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .comeback-bar-fill{height:100%;border-radius:99px}
 
 .milestone-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+
+/* PHOTO UPLOAD */
+.photo-btn{background:none;border:1px solid var(--border);border-radius:8px;color:rgba(245,245,245,0.4);cursor:pointer;font-size:13px;padding:4px 10px;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.photo-btn:hover{border-color:var(--pink);color:var(--pink)}
+.photo-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;cursor:pointer;border:1px solid var(--border);transition:transform .2s}
+.photo-thumb:hover{transform:scale(1.05)}
+.photo-uploading{opacity:0.5;font-size:12px;color:rgba(245,245,245,0.4)}
+.photo-lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:500;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.photo-lightbox img{max-width:90vw;max-height:90vh;border-radius:12px;object-fit:contain}
 </style>
 </head>
 <body>
@@ -486,11 +495,20 @@ async function renderLog(){
   badge.className='status-badge '+(total>=GOAL?'status-done':total>0?'status-going':'status-none');
   document.getElementById('setsList').innerHTML=sets.length===0
     ?'<p style="font-size:13px;color:rgba(245,245,245,0.3);text-align:center;padding:1rem 0">Noch keine Sätze heute — los geht\'s! 💪</p>'
-    :sets.map((s,i)=>'<div class="set-item">'
-      +'<div><span class="set-count">+'+s.reps+'</span><span style="font-size:13px;color:rgba(245,245,245,0.5);margin-left:6px">Liegestütze</span></div>'
-      +'<div style="display:flex;align-items:center;gap:12px"><span class="set-time">'+s.time+'</span>'
-      +'<button class="set-delete" onclick="deleteSet('+i+')">×</button></div>'
-      +'</div>').join('');
+    :sets.map((s,i)=>{
+      const photoHtml = s.photo
+        ? '<img src="'+s.photo+'" class="photo-thumb" onclick="openLightbox(\''+s.photo+'\')" title="Beweis-Foto"/>'
+        : '<button class="photo-btn" onclick="uploadPhoto('+i+')">📷</button>';
+      return '<div class="set-item">'
+        +'<div style="display:flex;align-items:center;gap:10px">'
+        +'<span class="set-count">+'+s.reps+'</span>'
+        +'<span style="font-size:13px;color:rgba(245,245,245,0.5)">Liegestütze</span>'
+        +'<span id="photo-slot-'+i+'">'+photoHtml+'</span>'
+        +'</div>'
+        +'<div style="display:flex;align-items:center;gap:12px"><span class="set-time">'+s.time+'</span>'
+        +'<button class="set-delete" onclick="deleteSet('+i+')">×</button></div>'
+        +'</div>';
+    }).join('');
   checkWinner(db);
 }
 
@@ -696,6 +714,88 @@ function renderGamification(stats, sorted, elapsed) {
   } else {
     document.getElementById('comebackWrap').style.display='none';
   }
+}
+
+
+// Hidden file input for camera
+const fileInput = document.createElement('input');
+fileInput.type = 'file';
+fileInput.accept = 'image/*';
+fileInput.capture = 'environment';
+fileInput.style.display = 'none';
+document.body.appendChild(fileInput);
+let pendingPhotoSetIndex = null;
+
+async function uploadPhoto(setIdx) {
+  pendingPhotoSetIndex = setIdx;
+  fileInput.click();
+}
+
+fileInput.addEventListener('change', async () => {
+  const file = fileInput.files[0];
+  if (!file || pendingPhotoSetIndex === null) return;
+  const idx = pendingPhotoSetIndex;
+  pendingPhotoSetIndex = null;
+  fileInput.value = '';
+
+  const slot = document.getElementById('photo-slot-' + idx);
+  if (slot) slot.innerHTML = '<span class="photo-uploading">⏳ Wird hochgeladen...</span>';
+
+  try {
+    // Compress image using Canvas
+    const compressed = await compressImage(file, 800, 0.75);
+    const td = today();
+
+    const formData = new FormData();
+    formData.append('file', compressed, 'photo.jpg');
+    formData.append('uid', currentUser);
+    formData.append('date', td);
+    formData.append('setIndex', String(idx));
+
+    const res = await fetch('/api/upload', { method: 'POST', body: formData });
+    const data = await res.json();
+
+    if (!data.ok) throw new Error(data.error);
+
+    // Save photo URL to set data
+    const db = await fetchDB();
+    const sets = [...((db[currentUser] || {})[td] || [])];
+    if (sets[idx]) {
+      sets[idx].photo = data.url;
+      await saveUserDay(currentUser, td, sets);
+    }
+    renderLog();
+  } catch (err) {
+    console.error('Upload failed:', err);
+    toast('Upload fehlgeschlagen ❌');
+    renderLog();
+  }
+});
+
+function compressImage(file, maxSize, quality) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      if (w > h && w > maxSize) { h = h * maxSize / w; w = maxSize; }
+      else if (h > maxSize) { w = w * maxSize / h; h = maxSize; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      canvas.toBlob(blob => resolve(new File([blob], 'photo.jpg', { type: 'image/jpeg' })), 'image/jpeg', quality);
+    };
+    img.src = url;
+  });
+}
+
+function openLightbox(url) {
+  const lb = document.createElement('div');
+  lb.className = 'photo-lightbox';
+  lb.innerHTML = '<img src="' + url + '"/>';
+  lb.onclick = () => document.body.removeChild(lb);
+  document.body.appendChild(lb);
 }
 
 // Init
