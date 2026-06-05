@@ -51,14 +51,37 @@ export default async function handler(req, res) {
   const claudeData = await claudeRes.json();
   const message = claudeData.content[0].text;
 
-  // 3. WhatsApp senden via Make.com Webhook
-  await fetch(process.env.MAKE_WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message, time })
-  });
+  // 3. WhatsApp senden via Twilio direkt
+  const accountSid = process.env.TWILIO_ACCOUNT_SID;
+  const authToken = process.env.TWILIO_AUTH_TOKEN;
+  const from = process.env.TWILIO_WHATSAPP_FROM; // z.B. 'whatsapp:+447360536168'
+  const to = process.env.WHATSAPP_GROUP_ID;       // z.B. 'whatsapp:+49...' oder Gruppen-ID
 
-  return res.status(200).json({ ok: true, message });
+  const twilioRes = await fetch(
+    `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + Buffer.from(`${accountSid}:${authToken}`).toString('base64')
+      },
+      body: new URLSearchParams({
+        From: from,
+        To: to,
+        ContentSid: process.env.TWILIO_TEMPLATE_SID,  // Template SID aus Twilio
+        ContentVariables: JSON.stringify({ '1': message })
+      }).toString()
+    }
+  );
+
+  const twilioData = await twilioRes.json();
+
+  if (twilioData.error_code) {
+    console.error('Twilio error:', twilioData);
+    return res.status(500).json({ ok: false, error: twilioData.message });
+  }
+
+  return res.status(200).json({ ok: true, message, twilioSid: twilioData.sid });
 }
 
 function buildSystemPrompt(time) {
@@ -105,9 +128,9 @@ DOMINIK (München):
 BEZIEHUNG: Patrick, Dominik und Flo sind beste Freunde.
 
 ${time === 'midday'
-  ? 'MITTAGS (12 Uhr): Neutral-motivierend. Perspektive ähnlich eines Vaters oder guten Freundes. Auf aktuelle Stats eingehen. Nur bei wirklich starker Leistung jemanden herausheben — nicht jedes Mal. Animiere alle.'
-  : 'ABENDS (20 Uhr): Sarkastisch-ironisch. Fokus auf die, die noch nichts oder wenig gemacht haben. Leichte Tiefschläge erlaubt. Trotzdem motivierend am Ende. Dunkler Humor ist erwünscht.'
-}`;
+    ? 'MITTAGS (12 Uhr): Neutral-motivierend. Perspektive ähnlich eines Vaters oder guten Freundes. Auf aktuelle Stats des Tages und gesamt eingehen. Nur bei wirklich starker Leistung jemanden herausheben — nicht jedes Mal. Animiere alle.'
+    : 'ABENDS (20 Uhr): Sarkastisch-ironisch. Fokus auf die, die noch nichts oder wenig gemacht haben. Leichte Tiefschläge erlaubt. Trotzdem motivierend am Ende. Dunkler Humor ist erwünscht.'
+  }`;
 }
 
 function buildUserPrompt(time, stats, elapsed) {
