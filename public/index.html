@@ -307,10 +307,7 @@ const path = window.location.pathname.replace('/','').toLowerCase();
 if(path==='flo'||path==='patrick'||path==='dominik') currentUser=path;
 
 function today(){
-  const now = new Date();
-  const offset = now.getTimezoneOffset();
-  const local = new Date(now.getTime() - offset * 60000);
-  return local.toISOString().slice(0,10);
+  return new Date().toLocaleDateString('sv-SE', {timeZone:'Europe/Berlin'});
 }
 function getTimeStr(){return new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}
 function daysSince(date){return Math.max(0,Math.floor((new Date()-date)/864e5))}
@@ -596,27 +593,27 @@ async function showCalUser(uid,el){
 
 function renderCalendar(uid,allData){
   const udata=(allData&&allData[uid])||{};
-  const now=new Date();const td=today();
+  const td=today();
   const elapsed=daysSince(CHALLENGE_START);
-  const show=Math.min(elapsed+1,35);
+  // Window start: Challenge start for first 35 days, then roll forward
+  const windowStart = elapsed < 35
+    ? new Date(CHALLENGE_START)
+    : new Date(CHALLENGE_START.getTime() + (elapsed - 34) * 864e5);
   let cells='';
-  for(let i=show-1;i>=0;i--){
-    const d=new Date(now);d.setDate(d.getDate()-i);
-    const key=d.toISOString().slice(0,10);
+  for(let i=0;i<35;i++){
+    const d=new Date(windowStart);d.setDate(d.getDate()+i);
+    const key=d.toLocaleDateString('sv-SE',{timeZone:'Europe/Berlin'});
     const sets=udata[key]||[];
     const dayTotal=sets.reduce((a,s)=>a+s.reps,0);
     const isToday=key===td;
+    const isFuture=key>td;
     let cls='cal-day';
-    if(d>now)cls+=' future';
+    if(isFuture)cls+=' future';
     else if(dayTotal>=GOAL)cls+=' hit';
     else if(dayTotal>0)cls+=' partial';
     else cls+=' miss';
     if(isToday)cls+=' today-marker';
     cells+='<div class="'+cls+'" title="'+key+': '+dayTotal+'">'+d.getDate()+'</div>';
-  }
-  for(let i=1;i<=35-show;i++){
-    const d=new Date(now);d.setDate(d.getDate()+i);
-    cells+='<div class="cal-day future">'+d.getDate()+'</div>';
   }
   document.getElementById('calGrid').innerHTML=cells;
 }
