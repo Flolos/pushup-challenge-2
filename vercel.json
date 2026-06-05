@@ -4,5 +4,9 @@
     { "source": "/patrick", "destination": "/index.html" },
     { "source": "/dominik", "destination": "/index.html" },
     { "source": "/api/(.*)", "destination": "/api/$1" }
+  ],
+  "crons": [
+    { "path": "/api/notify?time=midday", "schedule": "0 11 * * *" },
+    { "path": "/api/notify?time=evening", "schedule": "0 19 * * *" }
   ]
 }
