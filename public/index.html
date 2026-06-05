@@ -164,6 +164,24 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .badge-tip strong{display:block;color:var(--yellow);margin-bottom:3px;font-size:13px}
 .badge-wrap:hover .badge-tip{opacity:1}
 .badge-wrap.active .badge-tip{opacity:1}
+
+/* COMMENTS */
+.comment-btn{background:none;border:1px solid var(--border);border-radius:8px;color:rgba(245,245,245,0.4);cursor:pointer;font-size:12px;padding:4px 8px;transition:all .2s;display:inline-flex;align-items:center;gap:4px}
+.comment-btn:hover{border-color:var(--pink);color:var(--pink)}
+.comment-btn.has-comments{border-color:rgba(198,44,176,0.4);color:var(--pink)}
+.comment-panel{margin-top:8px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:10px;display:none}
+.comment-panel.open{display:block}
+.comment-item{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.comment-item:last-of-type{border-bottom:none}
+.comment-author{font-weight:600;font-size:12px;flex-shrink:0}
+.comment-text{color:rgba(245,245,245,0.8);flex:1}
+.comment-time{font-size:11px;color:rgba(245,245,245,0.3);flex-shrink:0}
+.comment-input-row{display:flex;gap:8px;margin-top:8px}
+.comment-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:13px;font-family:'DM Sans',sans-serif;padding:7px 10px;outline:none;transition:border-color .2s}
+.comment-input:focus{border-color:var(--pink)}
+.comment-input::placeholder{color:rgba(245,245,245,0.2)}
+.comment-send{padding:7px 14px;background:var(--pink);border:none;border-radius:8px;color:var(--white);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.comment-send:hover{background:#d930c0}
 </style>
 </head>
 <body>
@@ -509,14 +527,34 @@ async function renderLog(){
       const photoHtml = s.photo
         ? '<img src="'+s.photo+'" class="photo-thumb" onclick="openLightbox(\''+s.photo+'\')" title="Beweis-Foto"/>'
         : '<button class="photo-btn" onclick="uploadPhoto('+i+')">📷</button>';
-      return '<div class="set-item">'
+      const comments = s.comments || [];
+      const commentCount = comments.length;
+      const commentsHtml = comments.map(c=>
+        '<div class="comment-item">'
+        +'<span class="comment-author" style="color:'+USERS[c.uid].color+'">'+USERS[c.uid].name+'</span>'
+        +'<span class="comment-text">'+c.text+'</span>'
+        +'<span class="comment-time">'+c.time+'</span>'
+        +'</div>'
+      ).join('');
+      return '<div class="set-item" style="flex-direction:column;align-items:stretch">'
+        +'<div style="display:flex;align-items:center;justify-content:space-between">'
         +'<div style="display:flex;align-items:center;gap:10px">'
         +'<span class="set-count">+'+s.reps+'</span>'
         +'<span style="font-size:13px;color:rgba(245,245,245,0.5)">Liegestütze</span>'
         +'<span id="photo-slot-'+i+'">'+photoHtml+'</span>'
         +'</div>'
-        +'<div style="display:flex;align-items:center;gap:12px"><span class="set-time">'+s.time+'</span>'
-        +'<button class="set-delete" onclick="deleteSet('+i+')">×</button></div>'
+        +'<div style="display:flex;align-items:center;gap:8px">'
+        +'<button class="comment-btn'+(commentCount?' has-comments':'')+'" onclick="toggleComment(\'comment-'+i+'\')">'
+        +'💬'+(commentCount?' '+commentCount:'')+'</button>'
+        +'<span class="set-time">'+s.time+'</span>'
+        +'<button class="set-delete" onclick="deleteSet('+i+')">×</button>'
+        +'</div></div>'
+        +'<div class="comment-panel" id="comment-'+i+'">'
+        +(commentsHtml||'<p style="font-size:12px;color:rgba(245,245,245,0.3);padding:4px 0">Noch kein Kommentar</p>')
+        +'<div class="comment-input-row">'
+        +'<input class="comment-input" id="comment-input-'+i+'" placeholder="Kommentar..." maxlength="120"/>'
+        +'<button class="comment-send" onclick="addComment('+i+')">→</button>'
+        +'</div></div>'
         +'</div>';
     }).join('');
   checkWinner(db);
@@ -831,6 +869,39 @@ document.addEventListener('click', e=>{
     document.querySelectorAll('.badge-wrap.active').forEach(e=>e.classList.remove('active'));
   }
 });
+
+function toggleComment(id) {
+  const panel = document.getElementById(id);
+  if(panel) panel.classList.toggle('open');
+}
+
+async function addComment(setIdx) {
+  const inputEl = document.getElementById('comment-input-' + setIdx);
+  const text = inputEl.value.trim();
+  if(!text) return;
+
+  const db = await fetchDB();
+  const td = today();
+  // Comments can be added to any user's sets — we need to know whose set it is
+  const sets = [...((db[currentUser]||{})[td]||[])];
+  if(!sets[setIdx]) return;
+  if(!sets[setIdx].comments) sets[setIdx].comments = [];
+  sets[setIdx].comments.push({
+    uid: currentUser,
+    text,
+    time: getTimeStr(),
+    ts: Date.now()
+  });
+  await saveUserDay(currentUser, td, sets);
+  inputEl.value = '';
+  renderLog();
+  // Re-open the comment panel after re-render
+  setTimeout(()=>{
+    const panel = document.getElementById('comment-' + setIdx);
+    if(panel) panel.classList.add('open');
+  }, 100);
+}
+
 // Init
 renderLog();
 initNotifications();
