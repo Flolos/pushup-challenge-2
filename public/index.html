@@ -126,6 +126,27 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .winner-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
 .confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:199}
 @media(max-width:600px){nav{padding:1rem}main{padding:1rem 1rem 4rem}.user-select{flex-direction:column;align-items:center}.dashboard-grid{grid-template-columns:1fr 1fr}.winner-title{font-size:3rem}}
+
+/* GAMIFICATION */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:99px;font-size:11px;font-weight:700;margin:2px}
+.badge-fire{background:rgba(238,28,37,0.15);color:#EE1C25;border:1px solid rgba(238,28,37,0.3)}
+.badge-skull{background:rgba(198,44,176,0.15);color:#C62CB0;border:1px solid rgba(198,44,176,0.3)}
+.badge-crown{background:rgba(251,179,20,0.15);color:#FBB314;border:1px solid rgba(251,179,20,0.3)}
+.badge-thousand{background:rgba(177,236,4,0.15);color:#B1EC04;border:1px solid rgba(177,236,4,0.3)}
+.badge-tagessieger{background:rgba(251,179,20,0.2);color:#FBB314;border:1px solid rgba(251,179,20,0.4);font-size:12px;padding:4px 10px}
+
+.tagessieger-wrap{background:linear-gradient(135deg,rgba(251,179,20,0.1),rgba(251,179,20,0.03));border:1px solid rgba(251,179,20,0.3);border-radius:16px;padding:1rem 1.5rem;margin-bottom:2rem;display:flex;align-items:center;gap:12px}
+.tagessieger-wrap h3{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--yellow)}
+.tagessieger-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid var(--yellow)}
+
+.comeback-wrap{background:rgba(198,44,176,0.06);border:1px solid rgba(198,44,176,0.2);border-radius:16px;padding:1rem 1.5rem;margin-bottom:2rem}
+.comeback-wrap h3{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--pink);margin-bottom:8px}
+.comeback-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:13px}
+.comeback-row:last-child{margin-bottom:0}
+.comeback-bar-bg{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden}
+.comeback-bar-fill{height:100%;border-radius:99px}
+
+.milestone-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 </style>
 </head>
 <body>
@@ -220,6 +241,19 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
         <div class="cal-legend-item"><div class="cal-dot" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1)"></div>Noch nicht</div>
       </div>
     </div>
+    <div id="tagessiegerWrap" class="tagessieger-wrap" style="display:none">
+      <img id="tagessiegerAvatar" class="tagessieger-avatar" src=""/>
+      <div>
+        <h3>⚡ Tagessieger</h3>
+        <div id="tagessiegerText" style="font-size:13px;color:rgba(245,245,245,0.7)"></div>
+      </div>
+    </div>
+
+    <div id="comebackWrap" class="comeback-wrap" style="display:none">
+      <h3>📊 Aufholjagd</h3>
+      <div id="comebackRows"></div>
+    </div>
+
     <div class="user-detail-wrap">
       <h2>Satz-Details</h2>
       <div class="user-detail-tabs">
@@ -289,9 +323,10 @@ async function saveUserDay(uid,dateStr,sets){
 
 function calcStats(allData){
   const stats={};
+  const td=today();
   for(const uid of ['flo','patrick','dominik']){
     const udata=allData[uid]||{};
-    let total=0,goalDays=0,bestStreak=0,cur=0;
+    let total=0,goalDays=0,bestStreak=0,cur=0,todayTotal=0;
     const elapsed=daysSince(CHALLENGE_START);
     for(let i=0;i<=elapsed;i++){
       const d=new Date(CHALLENGE_START);d.setDate(d.getDate()+i);
@@ -299,10 +334,11 @@ function calcStats(allData){
       const sets=udata[key]||[];
       const dayTotal=sets.reduce((a,s)=>a+s.reps,0);
       total+=dayTotal;
+      if(key===td)todayTotal=dayTotal;
       if(dayTotal>=GOAL){goalDays++;cur++;bestStreak=Math.max(bestStreak,cur);}
       else cur=0;
     }
-    stats[uid]={total,goalDays,bestStreak};
+    stats[uid]={total,goalDays,bestStreak,todayTotal};
   }
   return stats;
 }
@@ -512,16 +548,19 @@ async function renderDashboard(){
     const s=stats[uid];const u=USERS[uid];
     const medal=['🥇','🥈','🥉'][i];
     const consistency=elapsed>0?Math.round(s.goalDays/elapsed*100):0;
+    const badges=getBadges(stats,uid);
+    const badgeHtml=badges.map(b=>'<span class="badge '+b.cls+'">'+b.icon+' '+b.label+'</span>').join('');
     return '<div class="lb-row">'
       +'<div class="lb-rank">'+medal+'</div>'
       +'<img src="/'+uid+'.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;object-position:top;flex-shrink:0;border:2px solid '+u.color+'"/>'
-      +'<div class="lb-info"><div class="lb-name">'+u.name+'</div>'
+      +'<div class="lb-info"><div class="lb-name">'+u.name+'<span style="margin-left:6px">'+badgeHtml+'</span></div>'
       +'<div class="lb-meta">'+s.goalDays+' Tage Ziel erreicht · '+consistency+'% Consistency</div></div>'
       +'<div class="lb-score"><div class="lb-total" style="color:'+u.color+'">'+s.total.toLocaleString('de')+'</div>'
       +'<div class="lb-streak">🔥 '+s.bestStreak+' Tage Streak</div></div></div>';
   }).join('');
   renderCalendar(calUser,allData);
   renderDetailView(detailUser,allData);
+  renderGamification(stats,sorted,elapsed);
   checkWinner(allData);
 }
 
@@ -609,6 +648,54 @@ function renderDetailView(uid,allData){
 
 function toggleDayDetail(id){
   document.getElementById(id).classList.toggle('open');
+}
+
+
+function getBadges(stats, uid) {
+  const s = stats[uid];
+  const badges = [];
+  if(s.bestStreak >= 30) badges.push({cls:'badge-crown', icon:'👑', label:'30 Tage'});
+  if(s.bestStreak >= 7) badges.push({cls:'badge-skull', icon:'💀', label:'7 Streak'});
+  if(s.bestStreak >= 3) badges.push({cls:'badge-fire', icon:'🔥', label:s.bestStreak+'d'});
+  if(s.total >= 1000) badges.push({cls:'badge-thousand', icon:'💪', label:'1K'});
+  return badges;
+}
+
+function renderGamification(stats, sorted, elapsed) {
+  // TAGESSIEGER
+  const todayLeader = sorted.reduce((a,b) => stats[a].todayTotal >= stats[b].todayTotal ? a : b);
+  const todayMax = stats[todayLeader].todayTotal;
+  if(todayMax > 0) {
+    document.getElementById('tagessiegerWrap').style.display='flex';
+    document.getElementById('tagessiegerAvatar').src = '/'+todayLeader+'.png';
+    const pct = Math.round(todayMax/100*100);
+    document.getElementById('tagessiegerText').innerHTML =
+      '<strong style="color:var(--yellow)">'+USERS[todayLeader].name+'</strong> führt heute mit '+todayMax+' Liegestützen'
+      +(todayMax>=100?' — Tagesziel erreicht! ✓':'  — '+Math.max(0,100-todayMax)+' fehlen noch');
+  } else {
+    document.getElementById('tagessiegerWrap').style.display='none';
+  }
+
+  // COMEBACK / HEAD-TO-HEAD
+  const leader = sorted[0];
+  const leaderDays = stats[leader].goalDays;
+  const others = sorted.slice(1).filter(uid => leaderDays - stats[uid].goalDays <= 10 && leaderDays - stats[uid].goalDays > 0);
+  
+  if(others.length > 0 && elapsed > 0) {
+    document.getElementById('comebackWrap').style.display='block';
+    document.getElementById('comebackRows').innerHTML = others.map(uid => {
+      const gap = leaderDays - stats[uid].goalDays;
+      const pct = Math.round(stats[uid].goalDays / Math.max(1,leaderDays) * 100);
+      return '<div class="comeback-row">'
+        +'<img src="/'+uid+'.png" style="width:24px;height:24px;border-radius:50%;object-fit:cover;object-position:top;flex-shrink:0"/>'
+        +'<span style="width:60px;font-weight:500">'+USERS[uid].name+'</span>'
+        +'<div class="comeback-bar-bg"><div class="comeback-bar-fill" style="width:'+pct+'%;background:'+USERS[uid].color+'"></div></div>'
+        +'<span style="font-size:12px;color:rgba(245,245,245,0.4);white-space:nowrap">'+gap+' Tag'+(gap>1?'e':'')+' zurück</span>'
+        +'</div>';
+    }).join('');
+  } else {
+    document.getElementById('comebackWrap').style.display='none';
+  }
 }
 
 // Init
