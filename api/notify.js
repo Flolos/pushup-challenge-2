@@ -14,12 +14,12 @@ export default async function handler(req, res) {
   for (const uid of ['flo', 'patrick', 'dominik']) {
     const udata = allData[uid] || {};
     let total = 0, goalDays = 0, todayTotal = 0;
-    const today = new Date().toISOString().slice(0, 10);
+    const today = new Date().toLocaleDateString('sv-SE', {timeZone: 'Europe/Berlin'});
 
     for (let i = 0; i <= elapsed; i++) {
       const d = new Date(CHALLENGE_START);
       d.setDate(d.getDate() + i);
-      const key = d.toISOString().slice(0, 10);
+      const key = d.toLocaleDateString('sv-SE', {timeZone: 'Europe/Berlin'});
       const sets = udata[key] || [];
       const dayTotal = sets.reduce((a, s) => a + s.reps, 0);
       total += dayTotal;
@@ -41,47 +41,54 @@ export default async function handler(req, res) {
       model: 'claude-sonnet-4-20250514',
       max_tokens: 400,
       system: buildSystemPrompt(time),
-      messages: [{
-        role: 'user',
-        content: buildUserPrompt(time, stats, elapsed)
-      }]
+      messages: [{ role: 'user', content: buildUserPrompt(time, stats, elapsed) }]
     })
   });
 
   const claudeData = await claudeRes.json();
   const message = claudeData.content[0].text;
 
-  // 3. WhatsApp senden via Twilio direkt
-  const accountSid = process.env.TWILIO_ACCOUNT_SID;
-  const authToken = process.env.TWILIO_AUTH_TOKEN;
-  const from = process.env.TWILIO_WHATSAPP_FROM; // z.B. 'whatsapp:+447360536168'
-  const to = process.env.WHATSAPP_GROUP_ID;       // z.B. 'whatsapp:+49...' oder Gruppen-ID
+  // 3. WhatsApp senden via Meta Cloud API direkt
+  const phoneNumberId = process.env.META_PHONE_NUMBER_ID; // 969492749221290
+  const accessToken = process.env.META_ACCESS_TOKEN;
+  const groupId = process.env.WHATSAPP_GROUP_ID; // z.B. 120363xxxxxx@g.us
 
-  const twilioRes = await fetch(
-    `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
+  const metaRes = await fetch(
+    `https://graph.facebook.com/v19.0/${phoneNumberId}/messages`,
     {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic ' + Buffer.from(`${accountSid}:${authToken}`).toString('base64')
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
       },
-      body: new URLSearchParams({
-        From: from,
-        To: to,
-        ContentSid: process.env.TWILIO_TEMPLATE_SID,  // Template SID aus Twilio
-        ContentVariables: JSON.stringify({ '1': message })
-      }).toString()
+      body: JSON.stringify({
+        messaging_product: 'whatsapp',
+        to: groupId,
+        type: 'template',
+        template: {
+          name: 'daily_motivation',
+          language: { code: 'de' },
+          components: [
+            {
+              type: 'body',
+              parameters: [
+                { type: 'text', text: message }
+              ]
+            }
+          ]
+        }
+      })
     }
   );
 
-  const twilioData = await twilioRes.json();
+  const metaData = await metaRes.json();
 
-  if (twilioData.error_code) {
-    console.error('Twilio error:', twilioData);
-    return res.status(500).json({ ok: false, error: twilioData.message });
+  if (metaData.error) {
+    console.error('Meta API error:', metaData.error);
+    return res.status(500).json({ ok: false, error: metaData.error.message });
   }
 
-  return res.status(200).json({ ok: true, message, twilioSid: twilioData.sid });
+  return res.status(200).json({ ok: true, message, metaId: metaData.messages?.[0]?.id });
 }
 
 function buildSystemPrompt(time) {
@@ -128,7 +135,7 @@ DOMINIK (München):
 BEZIEHUNG: Patrick, Dominik und Flo sind beste Freunde.
 
 ${time === 'midday'
-    ? 'MITTAGS (12 Uhr): Neutral-motivierend. Perspektive ähnlich eines Vaters oder guten Freundes. Auf aktuelle Stats des Tages und gesamt eingehen. Nur bei wirklich starker Leistung jemanden herausheben — nicht jedes Mal. Animiere alle.'
+    ? 'MITTAGS (12 Uhr): Neutral-motivierend. Perspektive ähnlich eines Vaters oder guten Freundes. Auf aktuelle Stats eingehen. Nur bei wirklich starker Leistung jemanden herausheben — nicht jedes Mal. Animiere alle.'
     : 'ABENDS (20 Uhr): Sarkastisch-ironisch. Fokus auf die, die noch nichts oder wenig gemacht haben. Leichte Tiefschläge erlaubt. Trotzdem motivierend am Ende. Dunkler Humor ist erwünscht.'
   }`;
 }
