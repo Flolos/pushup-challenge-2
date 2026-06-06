@@ -804,9 +804,9 @@ const BADGE_INFO = {
 function getBadges(stats, uid) {
   const s = stats[uid];
   const badges = [];
-  if(s.bestStreak >= 30) badges.push({...BADGE_INFO.crown, label:'30d'});
-  if(s.bestStreak >= 7) badges.push({...BADGE_INFO.skull, label:'7d'});
-  if(s.bestStreak >= 3) badges.push({...BADGE_INFO.fire3, label:s.bestStreak+'d'});
+  if(s.bestStreak >= 30) badges.push({cls:BADGE_INFO.crown.cls, icon:BADGE_INFO.crown.icon, label:'30d', title:BADGE_INFO.crown.title, desc:BADGE_INFO.crown.desc});
+  if(s.bestStreak >= 7) badges.push({cls:BADGE_INFO.skull.cls, icon:BADGE_INFO.skull.icon, label:'7d', title:BADGE_INFO.skull.title, desc:BADGE_INFO.skull.desc});
+  if(s.bestStreak >= 3) badges.push({cls:BADGE_INFO.fire3.cls, icon:BADGE_INFO.fire3.icon, label:s.bestStreak+'d', title:BADGE_INFO.fire3.title, desc:BADGE_INFO.fire3.desc});
   if(s.total >= 10000) badges.push(BADGE_INFO.tenk);
   else if(s.total >= 5000) badges.push(BADGE_INFO.fivek);
   else if(s.total >= 1000) badges.push(BADGE_INFO.thousand);
