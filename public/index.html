@@ -881,7 +881,7 @@ function showWinnerScreen(sorted,stats){
   }).join('');
   const winner=USERS[sorted[0]];
   document.getElementById('winnerText').innerHTML=
-    '<strong style="color:'+winner.color+'">🎉 '+winner.name+' gewinnt die PUSH365 Challenge!</b><br><br>'
+    '<b style="color:'+winner.color+'">🎉 '+winner.name+' gewinnt die PUSH365 Challenge!</b><br><br>'
     +'Was ihr drei in 365 Tagen geleistet habt, verdient echten Respekt. Täglich 100 Liegestütze durchzuziehen — das ist keine Selbstverständlichkeit. Jeder von euch hat bewiesen, dass Disziplin und Wille über ein ganzes Jahr aufrechtzuerhalten ist.<br><br>'
     +'Ob erster, zweiter oder dritter Platz — ihr alle habt gewonnen. Nicht nur an Kraft, sondern an Charakter. Diese Challenge hat euch geformt, und das zeigt sich nicht nur in den Zahlen.<br><br>'
     +'Auf euch drei. 💪';
@@ -1220,7 +1220,7 @@ function renderGamification(stats, sorted, elapsed) {
     document.getElementById('tagessiegerWrap').style.display='flex';
     document.getElementById('tagessiegerAvatar').src = '/'+todayLeader+'.png';
     document.getElementById('tagessiegerText').innerHTML =
-      '<strong style="color:var(--yellow)">'+USERS[todayLeader].name+'</b> führt heute mit '+todayMax+' Liegestützen'
+      '<b style="color:var(--yellow)">'+USERS[todayLeader].name+'</b> führt heute mit '+todayMax+' Liegestützen'
       +(todayMax>=100?' — Tagesziel erreicht! ✓':'  — '+Math.max(0,100-todayMax)+' fehlen noch');
   } else {
     document.getElementById('tagessiegerWrap').style.display='none';
@@ -1256,7 +1256,7 @@ function renderGamification(stats, sorted, elapsed) {
       document.getElementById('nemesisWrap').style.display='flex';
       document.getElementById('nemesisAvatar').src = '/'+second+'.png';
       document.getElementById('nemesisInfo').innerHTML =
-        '<b>'+USERS[second].name+'</b> ist nur <strong style="color:var(--red)">'+gap+' Tag'+(gap!==1?'e':'')+' hinter '+USERS[leader].name+'</b>'
+        '<b>'+USERS[second].name+'</b> ist nur <b style="color:var(--red)">'+gap+' Tag'+(gap!==1?'e':'')+' hinter '+USERS[leader].name+'</b>'
         +' — '+stats[second].total.toLocaleString('de')+' vs '+stats[leader].total.toLocaleString('de')+' Liegestütze total. '
         +(gap===0?'Gleichstand! Wer bricht heute zuerst 100?':'Noch aufholbar — aber die Zeit läuft.');
     } else {
