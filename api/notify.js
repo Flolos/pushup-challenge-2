@@ -46,7 +46,11 @@ export default async function handler(req, res) {
   });
 
   const claudeData = await claudeRes.json();
-  const message = claudeData.content[0].text;
+  if (!claudeData.content || !claudeData.content[0]) {
+  console.error('Claude error:', JSON.stringify(claudeData));
+  return res.status(500).json({ ok: false, error: 'Claude API failed', details: claudeData });
+}
+const message = claudeData.content[0].text;
 
   // 3. WhatsApp senden via Meta Cloud API direkt
   const phoneNumberId = process.env.META_PHONE_NUMBER_ID; // 969492749221290
