@@ -15,7 +15,6 @@ export default async function handler(req, res) {
     const udata = allData[uid] || {};
     let total = 0, goalDays = 0, todayTotal = 0;
     const today = new Date().toLocaleDateString('sv-SE', {timeZone: 'Europe/Berlin'});
-
     for (let i = 0; i <= elapsed; i++) {
       const d = new Date(CHALLENGE_START);
       d.setDate(d.getDate() + i);
@@ -47,56 +46,59 @@ export default async function handler(req, res) {
 
   const claudeData = await claudeRes.json();
   if (!claudeData.content || !claudeData.content[0]) {
-  console.error('Claude error:', JSON.stringify(claudeData));
-  return res.status(500).json({ ok: false, error: 'Claude API failed', details: claudeData });
-}
-const message = claudeData.content[0].text;
+    console.error('Claude error:', JSON.stringify(claudeData));
+    return res.status(500).json({ ok: false, error: 'Claude API failed', details: claudeData });
+  }
+  const message = claudeData.content[0].text;
 
-  // 3. WhatsApp senden via Meta Cloud API direkt
-  const phoneNumberId = process.env.META_PHONE_NUMBER_ID; // 969492749221290
+  // 3. An alle drei einzeln senden
+  const phoneNumberId = process.env.META_PHONE_NUMBER_ID;
   const accessToken = process.env.META_ACCESS_TOKEN;
-  const groupId = process.env.WHATSAPP_GROUP_ID; // z.B. 120363xxxxxx@g.us
+  const recipients = [
+    { uid: 'flo',     phone: process.env.WHATSAPP_FLO },
+    { uid: 'patrick', phone: process.env.WHATSAPP_PATRICK },
+    { uid: 'dominik', phone: process.env.WHATSAPP_DOMINIK }
+  ].filter(r => r.phone);
 
-  const metaRes = await fetch(
-    `https://graph.facebook.com/v19.0/${phoneNumberId}/messages`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`
-      },
-      body: JSON.stringify({
-        messaging_product: 'whatsapp',
-        to: groupId,
-        type: 'template',
-        template: {
-          name: 'daily_motivation',
-          language: { code: 'de' },
-          components: [
-            {
+  const results = [];
+  for (const recipient of recipients) {
+    const metaRes = await fetch(
+      `https://graph.facebook.com/v19.0/${phoneNumberId}/messages`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+          messaging_product: 'whatsapp',
+          to: recipient.phone,
+          type: 'template',
+          template: {
+            name: 'daily_motivation',
+            language: { code: 'de' },
+            components: [{
               type: 'body',
-              parameters: [
-                { type: 'text', text: message }
-              ]
-            }
-          ]
-        }
-      })
+              parameters: [{ type: 'text', text: message }]
+            }]
+          }
+        })
+      }
+    );
+    const metaData = await metaRes.json();
+    if (metaData.error) {
+      console.error('Meta error for', recipient.uid, ':', metaData.error);
+      results.push({ uid: recipient.uid, ok: false, error: metaData.error.message });
+    } else {
+      results.push({ uid: recipient.uid, ok: true, id: metaData.messages?.[0]?.id });
     }
-  );
-
-  const metaData = await metaRes.json();
-
-  if (metaData.error) {
-    console.error('Meta API error:', metaData.error);
-    return res.status(500).json({ ok: false, error: metaData.error.message });
   }
 
-  return res.status(200).json({ ok: true, message, metaId: metaData.messages?.[0]?.id });
+  return res.status(200).json({ ok: true, message, results });
 }
 
 function buildSystemPrompt(time) {
-  return `Du bist Military Drill-Sergeant, der jetzt drei Männer durch eine 365-Tage Liegestütz-Challenge coacht. Du schreibst WhatsApp-Nachrichten in die Gruppe der drei.
+  return `Du bist Military Drill-Sergeant, der jetzt drei Männer durch eine 365-Tage Liegestütz-Challenge coacht. Du schreibst WhatsApp-Nachrichten an die drei einzeln.
 
 DEIN STIL:
 - Humor-Mix aus Jimmy Carr (dunkel, sarkastisch, präzise Tiefschläge) und Jimmy Fallon (warm, selbstironisch, manchmal albern)
@@ -150,10 +152,8 @@ function buildUserPrompt(time, stats, elapsed) {
     if (b[1].goalDays !== a[1].goalDays) return b[1].goalDays - a[1].goalDays;
     return b[1].total - a[1].total;
   });
-
   const statsText = sorted.map(([uid, s]) =>
     `${names[uid]}: ${s.todayTotal} Liegestütze heute | ${s.goalDays} Tage Ziel erreicht | ${s.total} gesamt`
   ).join('\n');
-
   return `Tag ${elapsed + 1} der Challenge. Aktuelle Stats:\n\n${statsText}\n\nSchreibe jetzt die ${time === 'midday' ? 'Mittags' : 'Abend'}-Nachricht für die Gruppe.`;
 }
