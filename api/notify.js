@@ -49,7 +49,15 @@ export default async function handler(req, res) {
     console.error('Claude error:', JSON.stringify(claudeData));
     return res.status(500).json({ ok: false, error: 'Claude API failed', details: claudeData });
   }
-  const message = claudeData.content[0].text;
+  const rawMessage = claudeData.content[0].text;
+  // Clean message for WhatsApp template: remove markdown, limit length
+  const message = rawMessage
+    .replace(/\*\*/g, '')
+    .replace(/^(FLO|PATRICK|DOMINIK):\s*/gm, '')
+    .replace(/\n\n+/g, ' ')
+    .replace(/\n/g, ' ')
+    .trim()
+    .slice(0, 1000);
 
   // 3. An alle drei einzeln senden
   const phoneNumberId = process.env.META_PHONE_NUMBER_ID;
