@@ -31,7 +31,8 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .goal-bar-fill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
 .goal-label{font-size:12px;color:rgba(245,245,245,0.4);margin-top:6px}
 .sets-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem}
-.set-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:10px;font-size:13px}
+.set-item{background:rgba(255,255,255,0.03);border-radius:10px;padding:10px 14px;font-size:13px}
+.set-row{display:flex;align-items:center;justify-content:space-between}
 .set-time{color:rgba(245,245,245,0.4);font-size:12px}
 .set-count{font-weight:600;color:var(--lime)}
 .set-delete{background:none;border:none;color:rgba(245,245,245,0.2);cursor:pointer;font-size:18px;padding:0 4px;transition:color .2s;line-height:1}
@@ -46,6 +47,19 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .quick-btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
 .quick-btn{padding:7px 14px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:rgba(245,245,245,0.6);font-size:13px;cursor:pointer;transition:all .2s}
 .quick-btn:hover{background:rgba(251,179,20,0.15);border-color:var(--yellow);color:var(--yellow)}
+.photo-btn{background:none;border:1px solid var(--border);border-radius:8px;color:rgba(245,245,245,0.4);cursor:pointer;font-size:12px;padding:4px 8px;transition:all .2s}
+.photo-btn:hover{border-color:var(--pink);color:var(--pink)}
+.photo-thumb{width:40px;height:40px;border-radius:6px;object-fit:cover;cursor:pointer;border:1px solid var(--border)}
+.comment-btn{background:none;border:1px solid var(--border);border-radius:8px;color:rgba(245,245,245,0.4);cursor:pointer;font-size:12px;padding:4px 8px;transition:all .2s}
+.comment-btn:hover,.comment-btn.has-comments{border-color:var(--pink);color:var(--pink)}
+.comment-panel{margin-top:8px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:10px;display:none}
+.comment-panel.open{display:block}
+.comment-item{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.comment-item:last-of-type{border-bottom:none}
+.comment-input-row{display:flex;gap:8px;margin-top:8px}
+.comment-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:13px;font-family:'DM Sans',sans-serif;padding:7px 10px;outline:none}
+.comment-input:focus{border-color:var(--pink)}
+.comment-send{padding:7px 14px;background:var(--pink);border:none;border-radius:8px;color:var(--white);font-size:13px;font-weight:600;cursor:pointer}
 .video-card{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:2rem}
 .video-header{padding:1.2rem 1.5rem;display:flex;align-items:center;gap:10px}
 .video-header h3{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px}
@@ -69,6 +83,15 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .lb-score{text-align:right}
 .lb-total{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1}
 .lb-streak{font-size:11px;color:rgba(245,245,245,0.4);margin-top:2px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:99px;font-size:11px;font-weight:700;margin:2px;cursor:pointer}
+.badge-fire{background:rgba(238,28,37,0.15);color:#EE1C25;border:1px solid rgba(238,28,37,0.3)}
+.badge-skull{background:rgba(198,44,176,0.15);color:#C62CB0;border:1px solid rgba(198,44,176,0.3)}
+.badge-crown{background:rgba(251,179,20,0.15);color:#FBB314;border:1px solid rgba(251,179,20,0.3)}
+.badge-thousand{background:rgba(177,236,4,0.15);color:#B1EC04;border:1px solid rgba(177,236,4,0.3)}
+.badge-wrap{position:relative;display:inline-flex}
+.badge-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1a1a2e;border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:12px;color:var(--white);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;z-index:50;text-align:center;min-width:160px}
+.badge-tip b{display:block;color:var(--yellow);margin-bottom:3px;font-size:13px}
+.badge-wrap:hover .badge-tip,.badge-wrap.active .badge-tip{opacity:1}
 .cal-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
 .cal-wrap h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1rem}
 .cal-user-tabs{display:flex;gap:6px;margin-bottom:1.2rem}
@@ -84,6 +107,34 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .cal-legend{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
 .cal-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(245,245,245,0.5)}
 .cal-dot{width:10px;height:10px;border-radius:2px}
+.tagessieger-wrap{background:linear-gradient(135deg,rgba(251,179,20,0.1),rgba(251,179,20,0.03));border:1px solid rgba(251,179,20,0.3);border-radius:16px;padding:1rem 1.5rem;margin-bottom:2rem;display:flex;align-items:center;gap:12px}
+.tagessieger-wrap h3{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--yellow)}
+.comeback-wrap{background:rgba(198,44,176,0.06);border:1px solid rgba(198,44,176,0.2);border-radius:16px;padding:1rem 1.5rem;margin-bottom:2rem}
+.comeback-wrap h3{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--pink);margin-bottom:8px}
+.comeback-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:13px}
+.comeback-bar-bg{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden}
+.comeback-bar-fill{height:100%;border-radius:99px}
+.nemesis-wrap{background:linear-gradient(135deg,rgba(238,28,37,0.08),rgba(198,44,176,0.08));border:1px solid rgba(238,28,37,0.25);border-radius:16px;padding:1.2rem 1.5rem;margin-bottom:2rem;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.nemesis-wrap h3{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--red);white-space:nowrap}
+.nemesis-info{flex:1;font-size:13px;color:rgba(245,245,245,0.7)}
+.records-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.record-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.2rem;text-align:center}
+.record-card .r-icon{font-size:1.8rem;margin-bottom:6px}
+.record-card .r-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(245,245,245,0.4);margin-bottom:6px}
+.record-card .r-value{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1}
+.record-card .r-holder{font-size:12px;color:rgba(245,245,245,0.5);margin-top:4px}
+.milestone-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
+.milestone-wrap h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1.2rem}
+.milestone-track{position:relative;height:8px;background:rgba(255,255,255,0.06);border-radius:99px;margin:2rem 0 1rem}
+.milestone-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--pink),var(--yellow),var(--lime));transition:width .8s cubic-bezier(.4,0,.2,1)}
+.milestone-marker{position:absolute;top:50%;transform:translate(-50%,-50%)}
+.milestone-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--bg)}
+.milestone-dot.reached{box-shadow:0 0 8px currentColor}
+.milestone-labels{display:flex;justify-content:space-between;font-size:11px;color:rgba(245,245,245,0.4)}
+.milestone-current{text-align:center;margin-bottom:1rem}
+.milestone-current .big{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--lime);line-height:1}
+.milestone-current .sub{font-size:13px;color:rgba(245,245,245,0.5)}
+.milestone-next{background:rgba(251,179,20,0.08);border:1px solid rgba(251,179,20,0.2);border-radius:10px;padding:10px 14px;font-size:13px;color:rgba(245,245,245,0.7);text-align:center;margin-top:8px}
 .user-detail-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
 .user-detail-wrap h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1rem}
 .user-detail-tabs{display:flex;gap:6px;margin-bottom:1.2rem}
@@ -97,6 +148,11 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .detail-day-sets.open{display:block}
 .detail-set-line{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04)}
 .detail-set-line:last-child{border-bottom:none}
+.notif-banner{background:rgba(198,44,176,0.1);border:1px solid rgba(198,44,176,0.3);border-radius:16px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.notif-banner p{font-size:13px;color:rgba(245,245,245,0.7)}
+.notif-btn{padding:8px 18px;background:var(--pink);border:none;border-radius:8px;color:var(--white);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.notif-btn:hover{background:#d930c0}
+.notif-dismiss{background:none;border:none;color:rgba(245,245,245,0.3);cursor:pointer;font-size:18px;padding:0 4px}
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--lime);color:#0a1a00;padding:12px 24px;border-radius:12px;font-weight:600;font-size:14px;transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:999;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .status-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600}
@@ -105,11 +161,8 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .status-none{background:rgba(238,28,37,0.1);color:rgba(238,28,37,0.6);border:1px solid rgba(238,28,37,0.2)}
 .section-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:rgba(245,245,245,0.3);margin-bottom:1rem}
 .loading{text-align:center;padding:2rem;color:rgba(245,245,245,0.3);font-size:14px}
-.notif-banner{background:rgba(198,44,176,0.1);border:1px solid rgba(198,44,176,0.3);border-radius:16px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-.notif-banner p{font-size:13px;color:rgba(245,245,245,0.7)}
-.notif-btn{padding:8px 18px;background:var(--pink);border:none;border-radius:8px;color:var(--white);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
-.notif-btn:hover{background:#d930c0}
-.notif-dismiss{background:none;border:none;color:rgba(245,245,245,0.3);cursor:pointer;font-size:18px;padding:0 4px}
+.photo-lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:500;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.photo-lightbox img{max-width:90vw;max-height:90vh;border-radius:12px;object-fit:contain}
 #winnerScreen{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto}
 .winner-wrap{max-width:700px;margin:0 auto;padding:3rem 2rem;text-align:center}
 .winner-title{font-family:'Bebas Neue',sans-serif;font-size:5rem;letter-spacing:4px;background:linear-gradient(90deg,var(--pink),var(--yellow),var(--lime));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.5rem}
@@ -125,64 +178,14 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 .winner-msg p{font-size:14px;line-height:1.8;color:rgba(245,245,245,0.8)}
 .winner-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
 .confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:199}
-@media(max-width:600px){nav{padding:1rem}main{padding:1rem 1rem 4rem}.user-select{flex-direction:column;align-items:center}.dashboard-grid{grid-template-columns:1fr 1fr}.winner-title{font-size:3rem}}
-
-/* GAMIFICATION */
-.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:99px;font-size:11px;font-weight:700;margin:2px}
-.badge-fire{background:rgba(238,28,37,0.15);color:#EE1C25;border:1px solid rgba(238,28,37,0.3)}
-.badge-skull{background:rgba(198,44,176,0.15);color:#C62CB0;border:1px solid rgba(198,44,176,0.3)}
-.badge-crown{background:rgba(251,179,20,0.15);color:#FBB314;border:1px solid rgba(251,179,20,0.3)}
-.badge-thousand{background:rgba(177,236,4,0.15);color:#B1EC04;border:1px solid rgba(177,236,4,0.3)}
-.badge-tagessieger{background:rgba(251,179,20,0.2);color:#FBB314;border:1px solid rgba(251,179,20,0.4);font-size:12px;padding:4px 10px}
-
-.tagessieger-wrap{background:linear-gradient(135deg,rgba(251,179,20,0.1),rgba(251,179,20,0.03));border:1px solid rgba(251,179,20,0.3);border-radius:16px;padding:1rem 1.5rem;margin-bottom:2rem;display:flex;align-items:center;gap:12px}
-.tagessieger-wrap h3{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--yellow)}
-.tagessieger-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid var(--yellow)}
-
-.comeback-wrap{background:rgba(198,44,176,0.06);border:1px solid rgba(198,44,176,0.2);border-radius:16px;padding:1rem 1.5rem;margin-bottom:2rem}
-.comeback-wrap h3{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--pink);margin-bottom:8px}
-.comeback-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:13px}
-.comeback-row:last-child{margin-bottom:0}
-.comeback-bar-bg{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden}
-.comeback-bar-fill{height:100%;border-radius:99px}
-
-.milestone-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-
-/* PHOTO UPLOAD */
-.photo-btn{background:none;border:1px solid var(--border);border-radius:8px;color:rgba(245,245,245,0.4);cursor:pointer;font-size:13px;padding:4px 10px;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
-.photo-btn:hover{border-color:var(--pink);color:var(--pink)}
-.photo-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;cursor:pointer;border:1px solid var(--border);transition:transform .2s}
-.photo-thumb:hover{transform:scale(1.05)}
-.photo-uploading{opacity:0.5;font-size:12px;color:rgba(245,245,245,0.4)}
-.photo-lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:500;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.photo-lightbox img{max-width:90vw;max-height:90vh;border-radius:12px;object-fit:contain}
-
-/* BADGE TOOLTIPS */
-.badge-wrap{position:relative;display:inline-flex}
-.badge-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1a1a2e;border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:12px;color:var(--white);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;z-index:50;text-align:center;min-width:160px}
-.badge-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1a1a2e}
-.badge-tip strong{display:block;color:var(--yellow);margin-bottom:3px;font-size:13px}
-.badge-wrap:hover .badge-tip{opacity:1}
-.badge-wrap.active .badge-tip{opacity:1}
-
-/* COMMENTS */
-.comment-btn{background:none;border:1px solid var(--border);border-radius:8px;color:rgba(245,245,245,0.4);cursor:pointer;font-size:12px;padding:4px 8px;transition:all .2s;display:inline-flex;align-items:center;gap:4px}
-.comment-btn:hover{border-color:var(--pink);color:var(--pink)}
-.comment-btn.has-comments{border-color:rgba(198,44,176,0.4);color:var(--pink)}
-.comment-panel{margin-top:8px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:10px;display:none}
-.comment-panel.open{display:block}
-.comment-item{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
-.comment-item:last-of-type{border-bottom:none}
-.comment-author{font-weight:600;font-size:12px;flex-shrink:0}
-.comment-text{color:rgba(245,245,245,0.8);flex:1}
-.comment-time{font-size:11px;color:rgba(245,245,245,0.3);flex-shrink:0}
-.comment-input-row{display:flex;gap:8px;margin-top:8px}
-.comment-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:13px;font-family:'DM Sans',sans-serif;padding:7px 10px;outline:none;transition:border-color .2s}
-.comment-input:focus{border-color:var(--pink)}
-.comment-input::placeholder{color:rgba(245,245,245,0.2)}
-.comment-send{padding:7px 14px;background:var(--pink);border:none;border-radius:8px;color:var(--white);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
-.comment-send:hover{background:#d930c0}
+@media(max-width:600px){nav{padding:1rem}main{padding:1rem 1rem 4rem}.user-select{flex-direction:column;align-items:center}.dashboard-grid{grid-template-columns:1fr 1fr}.records-grid{grid-template-columns:1fr 1fr}.winner-title{font-size:3rem}}
 </style>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PUSH365">
+<meta name="theme-color" content="#03020C">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-192.png">
 </head>
 <body>
 <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
@@ -207,7 +210,7 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 <main>
   <div id="tab-log">
     <div id="notifBanner" class="notif-banner" style="display:none">
-      <p><strong>🔔 Tägliche Erinnerung</strong><br>Aktiviere Push-Benachrichtigungen damit wir dich täglich an deine Liegestütze erinnern.</p>
+      <p><b>🔔 Tägliche Erinnerung</b><br>Aktiviere Push-Benachrichtigungen damit wir dich täglich an deine Liegestütze erinnern.</p>
       <div style="display:flex;gap:8px;align-items:center">
         <button class="notif-btn" onclick="requestNotifPermission()">Aktivieren</button>
         <button class="notif-dismiss" onclick="dismissNotifBanner()">×</button>
@@ -255,11 +258,32 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
     <p class="section-label">Gesamtübersicht · 365-Tage-Challenge ab 04.06.2026</p>
     <div class="dashboard-grid" id="statsGrid"><div class="loading">Lade Daten...</div></div>
     <div class="leaderboard">
-      <div class="lb-header">
-        <h2>Rangliste</h2>
-        <span style="font-size:12px;color:rgba(245,245,245,0.4)">Tage mit Ziel · Gesamt</span>
-      </div>
+      <div class="lb-header"><h2>Rangliste</h2><span style="font-size:12px;color:rgba(245,245,245,0.4)">Tage mit Ziel · Gesamt</span></div>
       <div id="lbRows"><div class="loading">Lade...</div></div>
+    </div>
+    <div id="tagessiegerWrap" class="tagessieger-wrap" style="display:none">
+      <img id="tagessiegerAvatar" style="width:44px;height:44px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid var(--yellow)" src=""/>
+      <div><h3>⚡ Tagessieger</h3><div id="tagessiegerText" style="font-size:13px;color:rgba(245,245,245,0.7)"></div></div>
+    </div>
+    <div id="comebackWrap" class="comeback-wrap" style="display:none">
+      <h3>📊 Aufholjagd</h3><div id="comebackRows"></div>
+    </div>
+    <div id="nemesisWrap" class="nemesis-wrap" style="display:none">
+      <h3>⚔️ Nemesis</h3>
+      <img id="nemesisAvatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid var(--red);flex-shrink:0" src=""/>
+      <div class="nemesis-info" id="nemesisInfo"></div>
+    </div>
+    <div class="records-grid">
+      <div class="record-card"><div class="r-icon">🏋️</div><div class="r-label">Größter Satz</div><div class="r-value" id="recLargestSet">—</div><div class="r-holder" id="recLargestHolder"></div></div>
+      <div class="record-card"><div class="r-icon">📅</div><div class="r-label">Bester Tag</div><div class="r-value" id="recBestDay">—</div><div class="r-holder" id="recBestHolder"></div></div>
+      <div class="record-card"><div class="r-icon">🔥</div><div class="r-label">Längster Streak</div><div class="r-value" id="recBestStreak">—</div><div class="r-holder" id="recStreakHolder"></div></div>
+    </div>
+    <div class="milestone-wrap">
+      <h2>🏃 Meilenstein-Marathon</h2>
+      <div class="milestone-current"><div class="big" id="milestoneTotal">0</div><div class="sub">Liegestütze gesamt (alle 3)</div></div>
+      <div class="milestone-track"><div class="milestone-fill" id="milestoneFill" style="width:0%"></div><div id="milestoneMarkers"></div></div>
+      <div class="milestone-labels"><span>0</span><span>2.500</span><span>5.000</span><span>7.500</span><span>10.000</span></div>
+      <div class="milestone-next" id="milestoneNext"></div>
     </div>
     <div class="cal-wrap">
       <h2>Streak-Kalender</h2>
@@ -276,19 +300,6 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
         <div class="cal-legend-item"><div class="cal-dot" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1)"></div>Noch nicht</div>
       </div>
     </div>
-    <div id="tagessiegerWrap" class="tagessieger-wrap" style="display:none">
-      <img id="tagessiegerAvatar" class="tagessieger-avatar" src=""/>
-      <div>
-        <h3>⚡ Tagessieger</h3>
-        <div id="tagessiegerText" style="font-size:13px;color:rgba(245,245,245,0.7)"></div>
-      </div>
-    </div>
-
-    <div id="comebackWrap" class="comeback-wrap" style="display:none">
-      <h3>📊 Aufholjagd</h3>
-      <div id="comebackRows"></div>
-    </div>
-
     <div class="user-detail-wrap">
       <h2>Satz-Details</h2>
       <div class="user-detail-tabs">
@@ -306,303 +317,395 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
     <div class="winner-sub">365 Tage · 100 Liegestütze täglich</div>
     <div class="winner-podium" id="winnerPodium"></div>
     <div class="winner-stats" id="winnerStats"></div>
-    <div class="winner-msg">
-      <h3>🏆 An alle drei</h3>
-      <p id="winnerText"></p>
-    </div>
+    <div class="winner-msg"><h3>🏆 An alle drei</h3><p id="winnerText"></p></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<input type="file" id="hiddenFileInput" accept="image/*" capture="environment" style="display:none"/>
 <script>
-const USERS = {
+var USERS = {
   flo:    {name:'Flo',    color:'#C62CB0', initials:'FL', bg:'rgba(198,44,176,0.3)'},
   patrick:{name:'Patrick',color:'#FBB314', initials:'PA', bg:'rgba(251,179,20,0.3)'},
   dominik:{name:'Dominik',color:'#B1EC04', initials:'DO', bg:'rgba(177,236,4,0.3)'}
 };
-const GOAL = 100;
-const CHALLENGE_START = new Date('2026-06-04');
-const CHALLENGE_DAYS = 365;
-const NOTIF_HOUR = 18;
+var GOAL = 100;
+var CHALLENGE_START = new Date('2026-06-04');
+var CHALLENGE_DAYS = 365;
+var NOTIF_HOUR = 18;
+var MILESTONES = [
+  {val:1000,  icon:'🥾', label:'1K',   color:'#FBB314', desc:'1.000 — erste Meile'},
+  {val:2500,  icon:'🏃', label:'2.5K', color:'#C62CB0', desc:'2.500 — Halbmarathon-Pace'},
+  {val:5000,  icon:'💨', label:'5K',   color:'#B1EC04', desc:'5.000 — Halbmarathon!'},
+  {val:7500,  icon:'🦾', label:'7.5K', color:'#FBB314', desc:'7.500 — die Beine brennen'},
+  {val:10000, icon:'🏆', label:'10K',  color:'#EE1C25', desc:'MARATHON COMPLETE!'}
+];
+var BADGE_DEFS = {
+  crown:    {cls:'badge-crown',    icon:'👑', title:'Eiserne Disziplin', desc:'30 Tage Streak ohne Unterbrechung'},
+  skull:    {cls:'badge-skull',    icon:'💀', title:'Unnachgiebig',       desc:'7 Tage am Stück das Ziel erreicht'},
+  fire:     {cls:'badge-fire',     icon:'🔥', title:'On Fire',            desc:'3+ Tage Streak — halte durch!'},
+  thousand: {cls:'badge-thousand', icon:'💪', title:'1.000 Liegestütze',  desc:'Insgesamt 1.000 Liegestütze'},
+  fivek:    {cls:'badge-thousand', icon:'🦾', title:'5.000 Liegestütze',  desc:'5.000 — Respekt!'},
+  tenk:     {cls:'badge-crown',    icon:'🏆', title:'10.000 Liegestütze', desc:'Legendenstatus.'}
+};
 
-let currentUser = 'flo';
-let calUser = 'flo';
-let detailUser = 'flo';
-let cache = null;
+var currentUser = 'flo';
+var calUser = 'flo';
+var detailUser = 'flo';
+var cache = null;
+var pendingPhotoIdx = null;
 
-const path = window.location.pathname.replace('/','').toLowerCase();
-if(path==='flo'||path==='patrick'||path==='dominik') currentUser=path;
+(function(){
+  var p = window.location.pathname.replace('/','').toLowerCase();
+  if(p==='flo'||p==='patrick'||p==='dominik') currentUser = p;
+})();
 
-function today(){
+function today() {
   return new Date().toLocaleDateString('sv-SE', {timeZone:'Europe/Berlin'});
 }
-function getTimeStr(){return new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}
-function daysSince(date){return Math.max(0,Math.floor((new Date()-date)/864e5))}
-
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2400);
+function getTimeStr() {
+  return new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+}
+function daysSince(date) {
+  return Math.max(0, Math.floor((new Date() - date) / 864e5));
+}
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2400);
 }
 
-async function fetchDB(){
-  try{const r=await fetch('/api/data');if(!r.ok)throw new Error();cache=await r.json();return cache;}
-  catch{return cache||{};}
+async function fetchDB() {
+  try {
+    var r = await fetch('/api/data');
+    if(!r.ok) throw new Error();
+    cache = await r.json(); return cache;
+  } catch(e) { return cache || {}; }
 }
-
-async function saveUserDay(uid,dateStr,sets){
-  try{
-    const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user:uid,date:dateStr,sets})});
-    if(!r.ok)throw new Error();
-    if(cache){if(!cache[uid])cache[uid]={};cache[uid][dateStr]=sets;}
+async function saveUserDay(uid, dateStr, sets) {
+  try {
+    var r = await fetch('/api/data', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({user:uid, date:dateStr, sets:sets})
+    });
+    if(!r.ok) throw new Error();
+    if(cache){ if(!cache[uid]) cache[uid]={}; cache[uid][dateStr]=sets; }
     return true;
-  }catch{toast('Fehler beim Speichern ❌');return false;}
+  } catch(e) { showToast('Fehler beim Speichern ❌'); return false; }
 }
 
-function calcStats(allData){
-  const stats={};
-  const td=today();
-  for(const uid of ['flo','patrick','dominik']){
-    const udata=allData[uid]||{};
-    let total=0,goalDays=0,bestStreak=0,cur=0,todayTotal=0;
-    const elapsed=daysSince(CHALLENGE_START);
-    for(let i=0;i<=elapsed;i++){
-      const d=new Date(CHALLENGE_START);d.setDate(d.getDate()+i);
-      const key=d.toISOString().slice(0,10);
-      const sets=udata[key]||[];
-      const dayTotal=sets.reduce((a,s)=>a+s.reps,0);
-      total+=dayTotal;
-      if(key===td)todayTotal=dayTotal;
-      if(dayTotal>=GOAL){goalDays++;cur++;bestStreak=Math.max(bestStreak,cur);}
+function calcStats(allData) {
+  var stats = {}; var td = today();
+  var uids = ['flo','patrick','dominik'];
+  for(var i=0; i<uids.length; i++) {
+    var uid = uids[i]; var udata = allData[uid]||{};
+    var total=0, goalDays=0, bestStreak=0, cur=0, todayTotal=0;
+    var elapsed = daysSince(CHALLENGE_START);
+    for(var j=0; j<=elapsed; j++) {
+      var d = new Date(CHALLENGE_START); d.setDate(d.getDate()+j);
+      var key = d.toLocaleDateString('sv-SE',{timeZone:'Europe/Berlin'});
+      var sets = udata[key]||[];
+      var dayTotal = sets.reduce(function(a,s){ return a+s.reps; }, 0);
+      total += dayTotal;
+      if(key===td) todayTotal = dayTotal;
+      if(dayTotal>=GOAL){ goalDays++; cur++; if(cur>bestStreak) bestStreak=cur; }
       else cur=0;
     }
-    stats[uid]={total,goalDays,bestStreak,todayTotal};
+    stats[uid] = {total:total, goalDays:goalDays, bestStreak:bestStreak, todayTotal:todayTotal};
   }
   return stats;
 }
-
-function rankUsers(stats){
-  return['flo','patrick','dominik'].sort((a,b)=>{
-    if(stats[b].goalDays!==stats[a].goalDays)return stats[b].goalDays-stats[a].goalDays;
-    return stats[b].total-stats[a].total;
+function rankUsers(stats) {
+  return ['flo','patrick','dominik'].sort(function(a,b){
+    if(stats[b].goalDays !== stats[a].goalDays) return stats[b].goalDays - stats[a].goalDays;
+    return stats[b].total - stats[a].total;
   });
 }
-
-function checkWinner(allData){
-  if(daysSince(CHALLENGE_START)<CHALLENGE_DAYS)return;
-  const stats=calcStats(allData);
-  const sorted=rankUsers(stats);
-  showWinnerScreen(sorted,stats);
+function getBadges(stats, uid) {
+  var s = stats[uid]; var badges = [];
+  if(s.bestStreak>=30) badges.push({cls:BADGE_DEFS.crown.cls,    icon:BADGE_DEFS.crown.icon,    label:'30d', title:BADGE_DEFS.crown.title,    desc:BADGE_DEFS.crown.desc});
+  if(s.bestStreak>=7)  badges.push({cls:BADGE_DEFS.skull.cls,    icon:BADGE_DEFS.skull.icon,    label:'7d',  title:BADGE_DEFS.skull.title,    desc:BADGE_DEFS.skull.desc});
+  if(s.bestStreak>=3)  badges.push({cls:BADGE_DEFS.fire.cls,     icon:BADGE_DEFS.fire.icon,     label:s.bestStreak+'d', title:BADGE_DEFS.fire.title, desc:BADGE_DEFS.fire.desc});
+  if(s.total>=10000)   badges.push({cls:BADGE_DEFS.tenk.cls,     icon:BADGE_DEFS.tenk.icon,     label:'10K', title:BADGE_DEFS.tenk.title,     desc:BADGE_DEFS.tenk.desc});
+  else if(s.total>=5000)  badges.push({cls:BADGE_DEFS.fivek.cls, icon:BADGE_DEFS.fivek.icon,    label:'5K',  title:BADGE_DEFS.fivek.title,    desc:BADGE_DEFS.fivek.desc});
+  else if(s.total>=1000)  badges.push({cls:BADGE_DEFS.thousand.cls,icon:BADGE_DEFS.thousand.icon,label:'1K', title:BADGE_DEFS.thousand.title, desc:BADGE_DEFS.thousand.desc});
+  return badges;
 }
+function toggleBadgeTip(el) {
+  var isActive = el.classList.contains('active');
+  document.querySelectorAll('.badge-wrap.active').forEach(function(e){ e.classList.remove('active'); });
+  if(!isActive) el.classList.add('active');
+}
+document.addEventListener('click', function(e){
+  if(!e.target.closest('.badge-wrap')) document.querySelectorAll('.badge-wrap.active').forEach(function(e){ e.classList.remove('active'); });
+});
 
-function showWinnerScreen(sorted,stats){
-  document.getElementById('winnerScreen').style.display='block';
+function checkWinner(allData) {
+  if(daysSince(CHALLENGE_START) < CHALLENGE_DAYS) return;
+  var stats = calcStats(allData); var sorted = rankUsers(stats);
+  showWinnerScreen(sorted, stats);
+}
+function showWinnerScreen(sorted, stats) {
+  document.getElementById('winnerScreen').style.display = 'block';
   startConfetti();
-  const medals=['🥇','🥈','🥉'];
-  const podiumOrder=[sorted[1],sorted[0],sorted[2]];
-  const podiumClasses=['podium-2','podium-1','podium-3'];
-  const elapsed=daysSince(CHALLENGE_START);
-  document.getElementById('winnerPodium').innerHTML=podiumOrder.map(function(uid,i){
-    const u=USERS[uid];const s=stats[uid];const rank=sorted.indexOf(uid);
-    return '<div class="podium-place '+podiumClasses[i]+'">'
+  var medals = ['🥇','🥈','🥉'];
+  var podiumOrder = [sorted[1], sorted[0], sorted[2]];
+  var podiumClasses = ['podium-2','podium-1','podium-3'];
+  var elapsed = daysSince(CHALLENGE_START);
+  var html = '';
+  for(var i=0; i<podiumOrder.length; i++) {
+    var uid = podiumOrder[i]; var u = USERS[uid]; var s = stats[uid]; var rank = sorted.indexOf(uid);
+    html += '<div class="podium-place '+podiumClasses[i]+'">'
       +'<div style="font-size:1.5rem">'+medals[rank]+'</div>'
       +'<img src="/'+uid+'.png" style="width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid '+u.color+'"/>'
       +'<div style="font-weight:600;font-size:15px">'+u.name+'</div>'
       +'<div style="font-size:12px;color:rgba(245,245,245,0.4)">'+s.goalDays+' Tage · '+s.total.toLocaleString('de')+' Reps</div>'
-      +'<div class="podium-bar">'+(rank+1)+'</div>'
-      +'</div>';
-  }).join('');
-  document.getElementById('winnerStats').innerHTML=sorted.map(function(uid){
-    const u=USERS[uid];const s=stats[uid];
-    const consistency=Math.round(s.goalDays/Math.max(1,elapsed+1)*100);
-    return '<div class="stat-card"><div class="label" style="color:'+u.color+'">'+u.name+'</div>'
+      +'<div class="podium-bar">'+(rank+1)+'</div></div>';
+  }
+  document.getElementById('winnerPodium').innerHTML = html;
+  var statsHtml = '';
+  for(var i=0; i<sorted.length; i++) {
+    var uid = sorted[i]; var u = USERS[uid]; var s = stats[uid];
+    var consistency = Math.round(s.goalDays / Math.max(1, elapsed+1) * 100);
+    statsHtml += '<div class="stat-card"><div class="label" style="color:'+u.color+'">'+u.name+'</div>'
       +'<div class="value" style="color:'+u.color+'">'+s.goalDays+'</div>'
-      +'<div class="sub">Tage Ziel erreicht · '+consistency+'% Consistency</div></div>';
-  }).join('');
-  const winner=USERS[sorted[0]];
-  document.getElementById('winnerText').innerHTML=
-    '<strong style="color:'+winner.color+'">🎉 '+winner.name+' gewinnt die PUSH365 Challenge!</strong><br><br>'
-    +'Was ihr drei in 365 Tagen geleistet habt, verdient echten Respekt. Täglich 100 Liegestütze durchzuziehen — das ist keine Selbstverständlichkeit. Jeder von euch hat bewiesen, dass Disziplin und Wille über ein ganzes Jahr aufrechtzuerhalten ist.<br><br>'
-    +'Ob erster, zweiter oder dritter Platz — ihr alle habt gewonnen. Nicht nur an Kraft, sondern an Charakter. Diese Challenge hat euch geformt, und das zeigt sich nicht nur in den Zahlen.<br><br>'
-    +'Auf euch drei. 💪';
+      +'<div class="sub">Tage Ziel · '+consistency+'%</div></div>';
+  }
+  document.getElementById('winnerStats').innerHTML = statsHtml;
+  var winner = USERS[sorted[0]];
+  document.getElementById('winnerText').textContent =
+    '🎉 '+winner.name+' gewinnt die PUSH365 Challenge! Was ihr drei in 365 Tagen geleistet habt, verdient echten Respekt. Ob erster, zweiter oder dritter Platz — ihr alle habt gewonnen. Auf euch drei. 💪';
 }
-
-function startConfetti(){
-  const canvas=document.getElementById('confettiCanvas');
-  const ctx=canvas.getContext('2d');
-  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
-  const colors=['#C62CB0','#FBB314','#B1EC04','#EE1C25','#F5F5F5'];
-  const pieces=Array.from({length:150},()=>({
-    x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,
-    w:Math.random()*10+5,h:Math.random()*6+3,
-    color:colors[Math.floor(Math.random()*colors.length)],
-    rot:Math.random()*360,vx:Math.random()*2-1,vy:Math.random()*3+2,vr:Math.random()*6-3
-  }));
-  let frame=0;
-  function draw(){
+function startConfetti() {
+  var canvas = document.getElementById('confettiCanvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var colors = ['#C62CB0','#FBB314','#B1EC04','#EE1C25','#F5F5F5'];
+  var pieces = [];
+  for(var i=0; i<150; i++) {
+    pieces.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height-canvas.height,
+      w:Math.random()*10+5, h:Math.random()*6+3,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      rot:Math.random()*360, vx:Math.random()*2-1, vy:Math.random()*3+2, vr:Math.random()*6-3});
+  }
+  var frame = 0;
+  function draw() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    pieces.forEach(p=>{
-      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
-      ctx.fillStyle=p.color;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();
-      p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;
-      if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width;}
+    pieces.forEach(function(p){
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
+      if(p.y>canvas.height){ p.y=-10; p.x=Math.random()*canvas.width; }
     });
-    frame++;if(frame<600)requestAnimationFrame(draw);else ctx.clearRect(0,0,canvas.width,canvas.height);
+    frame++; if(frame<600) requestAnimationFrame(draw); else ctx.clearRect(0,0,canvas.width,canvas.height);
   }
   draw();
 }
 
-function initNotifications(){
-  if(!('Notification' in window))return;
-  if(Notification.permission==='default'){
-    document.getElementById('notifBanner').style.display='flex';
-  }
-  if(Notification.permission==='granted')scheduleNotification();
+function initNotifications() {
+  if(!('Notification' in window)) return;
+  if(Notification.permission==='default') document.getElementById('notifBanner').style.display='flex';
+  if(Notification.permission==='granted') scheduleNotification();
 }
-
-async function requestNotifPermission(){
-  const perm=await Notification.requestPermission();
-  document.getElementById('notifBanner').style.display='none';
-  if(perm==='granted'){scheduleNotification();toast('🔔 Erinnerungen aktiviert!');}
+async function requestNotifPermission() {
+  var perm = await Notification.requestPermission();
+  document.getElementById('notifBanner').style.display = 'none';
+  if(perm==='granted'){ scheduleNotification(); showToast('🔔 Erinnerungen aktiviert!'); }
 }
-
-function dismissNotifBanner(){
-  document.getElementById('notifBanner').style.display='none';
-}
-
-function scheduleNotification(){
-  const now=new Date();const target=new Date();
+function dismissNotifBanner() { document.getElementById('notifBanner').style.display = 'none'; }
+function scheduleNotification() {
+  var now = new Date(); var target = new Date();
   target.setHours(NOTIF_HOUR,0,0,0);
-  if(now>target)target.setDate(target.getDate()+1);
+  if(now>target) target.setDate(target.getDate()+1);
   setTimeout(function(){
-    const db=cache||{};const udata=db[currentUser]||{};
-    const sets=(udata[today()]||[]);
-    const total=sets.reduce((a,s)=>a+s.reps,0);
-    if(total<GOAL){
-      new Notification('PUSH365 💪',{
-        body:USERS[currentUser].name+', du hast heute erst '+total+' von 100 Liegestützen! Noch '+(GOAL-total)+' übrig.',
-        icon:'/favicon.ico'
-      });
-    }
+    var db = cache||{}; var udata = db[currentUser]||{};
+    var sets = udata[today()]||[];
+    var total = sets.reduce(function(a,s){ return a+s.reps; }, 0);
+    if(total<GOAL) new Notification('PUSH365 💪',{
+      body: USERS[currentUser].name+', du hast heute erst '+total+' von 100! Noch '+(GOAL-total)+' übrig.'
+    });
     scheduleNotification();
-  },target-now);
+  }, target-now);
 }
 
-function selectUser(uid){
-  currentUser=uid;
-  document.querySelectorAll('.user-pill').forEach(p=>p.classList.remove('selected'));
+function selectUser(uid) {
+  currentUser = uid;
+  document.querySelectorAll('.user-pill').forEach(function(p){ p.classList.remove('selected'); });
   document.getElementById('pill-'+uid).classList.add('selected');
-  history.replaceState(null,'','/'+uid);
   renderLog();
 }
-
-function showTab(tab,el){
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+function showTab(tab, el) {
+  document.querySelectorAll('.nav-tab').forEach(function(t){ t.classList.remove('active'); });
   el.classList.add('active');
-  document.getElementById('tab-log').style.display=tab==='log'?'block':'none';
-  document.getElementById('tab-dashboard').style.display=tab==='dashboard'?'block':'none';
-  if(tab==='dashboard')renderDashboard();
+  document.getElementById('tab-log').style.display = tab==='log' ? 'block' : 'none';
+  document.getElementById('tab-dashboard').style.display = tab==='dashboard' ? 'block' : 'none';
+  if(tab==='dashboard') renderDashboard();
 }
 
-async function renderLog(){
-  document.querySelectorAll('.user-pill').forEach(p=>p.classList.remove('selected'));
+async function renderLog() {
+  document.querySelectorAll('.user-pill').forEach(function(p){ p.classList.remove('selected'); });
   document.getElementById('pill-'+currentUser).classList.add('selected');
-  const db=await fetchDB();
-  const udata=db[currentUser]||{};
-  const td=today();const sets=udata[td]||[];
-  const total=sets.reduce((a,s)=>a+s.reps,0);
-  const pct=Math.min(100,Math.round(total/GOAL*100));
-  document.getElementById('todayTotal').textContent=total;
-  const bar=document.getElementById('goalBar');
-  bar.style.width=pct+'%';
-  bar.style.background=pct>=100?'#B1EC04':pct>=50?'#FBB314':'#EE1C25';
-  document.getElementById('goalLabel').textContent=total>=GOAL
-    ?'✓ Tagesziel erreicht! ('+total+' Liegestütze)'
-    :total+' von '+GOAL+' — noch '+(GOAL-total)+' übrig';
-  const badge=document.getElementById('todayStatus');
-  badge.textContent=total+' / '+GOAL;
-  badge.className='status-badge '+(total>=GOAL?'status-done':total>0?'status-going':'status-none');
-  document.getElementById('setsList').innerHTML=sets.length===0
-    ?'<p style="font-size:13px;color:rgba(245,245,245,0.3);text-align:center;padding:1rem 0">Noch keine Sätze heute — los geht\'s! 💪</p>'
-    :sets.map((s,i)=>{
-      const photoHtml = s.photo
-        ? '<img src="'+s.photo+'" class="photo-thumb" onclick="openLightbox(\''+s.photo+'\')" title="Beweis-Foto"/>'
+  var db = await fetchDB();
+  var udata = db[currentUser]||{}; var td = today();
+  var sets = udata[td]||[];
+  var total = sets.reduce(function(a,s){ return a+s.reps; }, 0);
+  var pct = Math.min(100, Math.round(total/GOAL*100));
+  document.getElementById('todayTotal').textContent = total;
+  var bar = document.getElementById('goalBar');
+  bar.style.width = pct+'%';
+  bar.style.background = pct>=100 ? '#B1EC04' : pct>=50 ? '#FBB314' : '#EE1C25';
+  document.getElementById('goalLabel').textContent = total>=GOAL
+    ? '✓ Tagesziel erreicht! ('+total+' Liegestütze)'
+    : total+' von '+GOAL+' — noch '+(GOAL-total)+' übrig';
+  var badge = document.getElementById('todayStatus');
+  badge.textContent = total+' / '+GOAL;
+  badge.className = 'status-badge '+(total>=GOAL?'status-done':total>0?'status-going':'status-none');
+
+  if(sets.length===0) {
+    document.getElementById('setsList').innerHTML = '<p style="font-size:13px;color:rgba(245,245,245,0.3);text-align:center;padding:1rem 0">Noch keine Sätze heute — los geht\'s! 💪</p>';
+  } else {
+    var html = '';
+    for(var i=0; i<sets.length; i++) {
+      var s = sets[i];
+      var photoHtml = s.photo
+        ? '<img src="'+s.photo+'" style="width:40px;height:40px;border-radius:6px;object-fit:cover;cursor:pointer;border:1px solid var(--border)" onclick="openLightbox(\''+s.photo+'\')" />'
         : '<button class="photo-btn" onclick="uploadPhoto('+i+')">📷</button>';
-      const comments = s.comments || [];
-      const commentCount = comments.length;
-      const commentsHtml = comments.map(c=>
-        '<div class="comment-item">'
-        +'<span class="comment-author" style="color:'+USERS[c.uid].color+'">'+USERS[c.uid].name+'</span>'
-        +'<span class="comment-text">'+c.text+'</span>'
-        +'<span class="comment-time">'+c.time+'</span>'
-        +'</div>'
-      ).join('');
-      return '<div class="set-item" style="flex-direction:column;align-items:stretch">'
-        +'<div style="display:flex;align-items:center;justify-content:space-between">'
+      var comments = s.comments || [];
+      var commentCount = comments.length;
+      var commentsHtml = '';
+      for(var ci=0; ci<comments.length; ci++) {
+        var c = comments[ci];
+        commentsHtml += '<div class="comment-item">'
+          +'<span style="font-weight:600;font-size:12px;color:'+USERS[c.uid].color+';flex-shrink:0">'+USERS[c.uid].name+'</span>'
+          +'<span style="color:rgba(245,245,245,0.8);flex:1;margin:0 8px">'+c.text+'</span>'
+          +'<span style="font-size:11px;color:rgba(245,245,245,0.3)">'+c.time+'</span>'
+          +'</div>';
+      }
+      html += '<div class="set-item">'
+        +'<div class="set-row">'
         +'<div style="display:flex;align-items:center;gap:10px">'
         +'<span class="set-count">+'+s.reps+'</span>'
         +'<span style="font-size:13px;color:rgba(245,245,245,0.5)">Liegestütze</span>'
         +'<span id="photo-slot-'+i+'">'+photoHtml+'</span>'
         +'</div>'
         +'<div style="display:flex;align-items:center;gap:8px">'
-        +'<button class="comment-btn'+(commentCount?' has-comments':'')+'" onclick="toggleComment(\'comment-'+i+'\')">'
-        +'💬'+(commentCount?' '+commentCount:'')+'</button>'
+        +'<button class="comment-btn'+(commentCount?' has-comments':'')+'" onclick="toggleComment(\'comment-'+i+'\')">💬'+(commentCount?' '+commentCount:'')+'</button>'
         +'<span class="set-time">'+s.time+'</span>'
         +'<button class="set-delete" onclick="deleteSet('+i+')">×</button>'
         +'</div></div>'
         +'<div class="comment-panel" id="comment-'+i+'">'
-        +(commentsHtml||'<p style="font-size:12px;color:rgba(245,245,245,0.3);padding:4px 0">Noch kein Kommentar</p>')
+        +(commentsHtml || '<p style="font-size:12px;color:rgba(245,245,245,0.3);padding:4px 0">Noch kein Kommentar</p>')
         +'<div class="comment-input-row">'
         +'<input class="comment-input" id="comment-input-'+i+'" placeholder="Kommentar..." maxlength="120"/>'
         +'<button class="comment-send" onclick="addComment('+i+')">→</button>'
-        +'</div></div>'
-        +'</div>';
-    }).join('');
+        +'</div></div></div>';
+    }
+    document.getElementById('setsList').innerHTML = html;
+  }
   checkWinner(db);
 }
 
-async function logSet(){
-  const inp=document.getElementById('repsInput');
-  const reps=parseInt(inp.value);
-  if(!reps||reps<1||reps>500){toast('Ungültige Zahl 🤔');return;}
-  const btn=document.getElementById('logBtn');
-  btn.disabled=true;btn.textContent='…';
-  const db=await fetchDB();
-  const td=today();
-  const sets=[...((db[currentUser]||{})[td]||[])];
-  sets.push({reps,time:getTimeStr(),ts:Date.now()});
-  const ok=await saveUserDay(currentUser,td,sets);
-  btn.disabled=false;btn.textContent='+ Satz';
-  if(ok){
+async function logSet() {
+  var inp = document.getElementById('repsInput');
+  var reps = parseInt(inp.value);
+  if(!reps||reps<1||reps>500){ showToast('Ungültige Zahl 🤔'); return; }
+  var btn = document.getElementById('logBtn');
+  btn.disabled=true; btn.textContent='…';
+  var db = await fetchDB(); var td = today();
+  var sets = JSON.parse(JSON.stringify((db[currentUser]||{})[td]||[]));
+  sets.push({reps:reps, time:getTimeStr(), ts:Date.now()});
+  var ok = await saveUserDay(currentUser, td, sets);
+  btn.disabled=false; btn.textContent='+ Satz';
+  if(ok) {
     inp.value='';
-    const total=sets.reduce((a,s)=>a+s.reps,0);
-    toast(total>=GOAL?'🏆 Tagesziel erreicht! '+total+' Liegestütze!':'+'+reps+' — weiter so! 💪');
+    var total = sets.reduce(function(a,s){ return a+s.reps; }, 0);
+    showToast(total>=GOAL ? '🏆 Tagesziel erreicht! '+total+' Liegestütze!' : '+'+reps+' — weiter so! 💪');
     renderLog();
   }
 }
-
-function quickLog(n){document.getElementById('repsInput').value=n;logSet();}
-
-async function deleteSet(idx){
-  const db=await fetchDB();const td=today();
-  const sets=[...((db[currentUser]||{})[td]||[])];
+function quickLog(n){ document.getElementById('repsInput').value=n; logSet(); }
+async function deleteSet(idx) {
+  var db = await fetchDB(); var td = today();
+  var sets = JSON.parse(JSON.stringify((db[currentUser]||{})[td]||[]));
   sets.splice(idx,1);
-  await saveUserDay(currentUser,td,sets);
-  renderLog();
+  await saveUserDay(currentUser, td, sets); renderLog();
 }
-
-document.addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&document.getElementById('repsInput')===document.activeElement)logSet();
+function toggleComment(id){ var p=document.getElementById(id); if(p) p.classList.toggle('open'); }
+async function addComment(setIdx) {
+  var inputEl = document.getElementById('comment-input-'+setIdx);
+  var text = inputEl.value.trim(); if(!text) return;
+  var db = await fetchDB(); var td = today();
+  var sets = JSON.parse(JSON.stringify((db[currentUser]||{})[td]||[]));
+  if(!sets[setIdx]) return;
+  if(!sets[setIdx].comments) sets[setIdx].comments=[];
+  sets[setIdx].comments.push({uid:currentUser, text:text, time:getTimeStr(), ts:Date.now()});
+  await saveUserDay(currentUser, td, sets);
+  inputEl.value=''; renderLog();
+  setTimeout(function(){ var p=document.getElementById('comment-'+setIdx); if(p) p.classList.add('open'); }, 100);
+}
+document.addEventListener('keydown', function(e){
+  if(e.key==='Enter' && document.getElementById('repsInput')===document.activeElement) logSet();
 });
 
-async function renderDashboard(){
-  const allData=await fetchDB();
-  const stats=calcStats(allData);
-  const sorted=rankUsers(stats);
-  const elapsed=daysSince(CHALLENGE_START);
-  const remaining=Math.max(0,CHALLENGE_DAYS-elapsed);
-  document.getElementById('statsGrid').innerHTML=
+var hiddenFileInput = document.getElementById('hiddenFileInput');
+hiddenFileInput.addEventListener('change', async function(){
+  var file = hiddenFileInput.files[0];
+  if(!file||pendingPhotoIdx===null) return;
+  var idx = pendingPhotoIdx; pendingPhotoIdx=null; hiddenFileInput.value='';
+  var slot = document.getElementById('photo-slot-'+idx);
+  if(slot) slot.innerHTML = '<span style="font-size:12px;color:rgba(245,245,245,0.4)">⏳</span>';
+  try {
+    var compressed = await compressImage(file, 800, 0.75);
+    var td = today();
+    var formData = new FormData();
+    formData.append('file', compressed, 'photo.jpg');
+    formData.append('uid', currentUser);
+    formData.append('date', td);
+    formData.append('setIndex', String(idx));
+    var res = await fetch('/api/upload', {method:'POST', body:formData});
+    var data = await res.json();
+    if(!data.ok) throw new Error(data.error);
+    var db = await fetchDB();
+    var sets = JSON.parse(JSON.stringify((db[currentUser]||{})[td]||[]));
+    if(sets[idx]){ sets[idx].photo=data.url; await saveUserDay(currentUser,td,sets); }
+    renderLog();
+  } catch(err){ console.error(err); showToast('Upload fehlgeschlagen ❌'); renderLog(); }
+});
+function uploadPhoto(idx){ pendingPhotoIdx=idx; hiddenFileInput.click(); }
+function compressImage(file, maxSize, quality) {
+  return new Promise(function(resolve){
+    var img = new Image(); var url = URL.createObjectURL(file);
+    img.onload = function(){
+      URL.revokeObjectURL(url);
+      var canvas = document.createElement('canvas');
+      var w=img.width, h=img.height;
+      if(w>h && w>maxSize){ h=h*maxSize/w; w=maxSize; }
+      else if(h>maxSize){ w=w*maxSize/h; h=maxSize; }
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      canvas.toBlob(function(blob){ resolve(new File([blob],'photo.jpg',{type:'image/jpeg'})); },'image/jpeg',quality);
+    };
+    img.src=url;
+  });
+}
+function openLightbox(url){
+  var lb=document.createElement('div'); lb.className='photo-lightbox';
+  var im=document.createElement('img'); im.src=url; lb.appendChild(im);
+  lb.onclick=function(){ document.body.removeChild(lb); };
+  document.body.appendChild(lb);
+}
+
+async function renderDashboard() {
+  var allData = await fetchDB();
+  var stats = calcStats(allData);
+  var sorted = rankUsers(stats);
+  var elapsed = daysSince(CHALLENGE_START);
+  var remaining = Math.max(0, CHALLENGE_DAYS-elapsed);
+  var grandTotal = 0;
+  for(var k=0; k<sorted.length; k++) grandTotal += stats[sorted[k]].total;
+
+  document.getElementById('statsGrid').innerHTML =
     '<div class="stat-card"><div class="label">Gesamt-Liegestütze</div>'
-    +'<div class="value" style="color:#C62CB0">'+Object.values(stats).reduce((a,s)=>a+s.total,0).toLocaleString('de')+'</div>'
+    +'<div class="value" style="color:#C62CB0">'+grandTotal.toLocaleString('de')+'</div>'
     +'<div class="sub">Alle 3 Teilnehmer</div></div>'
     +'<div class="stat-card"><div class="label">Führend</div>'
     +'<div class="value" style="color:#FBB314">'+USERS[sorted[0]].name+'</div>'
@@ -610,97 +713,190 @@ async function renderDashboard(){
     +'<div class="stat-card"><div class="label">Verbleibende Tage</div>'
     +'<div class="value" style="color:#B1EC04">'+remaining+'</div>'
     +'<div class="sub">Tag '+elapsed+' von 365</div></div>';
-  document.getElementById('lbRows').innerHTML=sorted.map(function(uid,i){
-    const s=stats[uid];const u=USERS[uid];
-    const medal=['🥇','🥈','🥉'][i];
-    const consistency=Math.round(s.goalDays/Math.max(1,elapsed+1)*100);
-    const badges=getBadges(stats,uid);
-    const badgeHtml=badges.map(b=>'<span class="badge '+b.cls+'">'+b.icon+' '+b.label+'</span>').join('');
-    return '<div class="lb-row">'
+
+  var lbHtml = '';
+  for(var i=0; i<sorted.length; i++) {
+    var uid = sorted[i]; var s = stats[uid]; var u = USERS[uid];
+    var medal = ['🥇','🥈','🥉'][i];
+    var consistency = Math.round(s.goalDays / Math.max(1,elapsed+1) * 100);
+    var badges = getBadges(stats, uid);
+    var badgeHtml = '';
+    for(var bi=0; bi<badges.length; bi++) {
+      var b = badges[bi];
+      badgeHtml += '<span class="badge-wrap" onclick="toggleBadgeTip(this)">'
+        +'<span class="badge '+b.cls+'">'+b.icon+' '+b.label+'</span>'
+        +'<div class="badge-tip"><b>'+b.title+'</b>'+b.desc+'</div>'
+        +'</span>';
+    }
+    lbHtml += '<div class="lb-row">'
       +'<div class="lb-rank">'+medal+'</div>'
       +'<img src="/'+uid+'.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;object-position:top;flex-shrink:0;border:2px solid '+u.color+'"/>'
       +'<div class="lb-info"><div class="lb-name">'+u.name+'<span style="margin-left:6px">'+badgeHtml+'</span></div>'
-      +'<div class="lb-meta">'+s.goalDays+' Tage Ziel erreicht · '+consistency+'% Consistency</div></div>'
+      +'<div class="lb-meta">'+s.goalDays+' Tage Ziel · '+consistency+'% Consistency</div></div>'
       +'<div class="lb-score"><div class="lb-total" style="color:'+u.color+'">'+s.total.toLocaleString('de')+'</div>'
       +'<div class="lb-streak">🔥 '+s.bestStreak+' Tage Streak</div></div></div>';
-  }).join('');
-  renderCalendar(calUser,allData);
-  renderDetailView(detailUser,allData);
-  renderGamification(stats,sorted,elapsed);
+  }
+  document.getElementById('lbRows').innerHTML = lbHtml;
+
+  renderGamification(stats, sorted, elapsed, grandTotal, allData);
+  renderCalendar(calUser, allData);
+  renderDetailView(detailUser, allData);
   checkWinner(allData);
 }
 
-async function showCalUser(uid,el){
-  calUser=uid;
-  document.querySelectorAll('.cal-user-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  renderCalendar(uid,await fetchDB());
-}
-
-function renderCalendar(uid,allData){
-  const udata=(allData&&allData[uid])||{};
-  const td=today();
-  const elapsed=daysSince(CHALLENGE_START);
-  // Window start: Challenge start for first 35 days, then roll forward
-  const windowStart = elapsed < 35
-    ? new Date(CHALLENGE_START)
-    : new Date(CHALLENGE_START.getTime() + (elapsed - 34) * 864e5);
-  let cells='';
-  for(let i=0;i<35;i++){
-    const d=new Date(windowStart);d.setDate(d.getDate()+i);
-    const key=d.toLocaleDateString('sv-SE',{timeZone:'Europe/Berlin'});
-    const sets=udata[key]||[];
-    const dayTotal=sets.reduce((a,s)=>a+s.reps,0);
-    const isToday=key===td;
-    const isFuture=key>td;
-    let cls='cal-day';
-    if(isFuture)cls+=' future';
-    else if(dayTotal>=GOAL)cls+=' hit';
-    else if(dayTotal>0)cls+=' partial';
-    else cls+=' miss';
-    if(isToday)cls+=' today-marker';
-    cells+='<div class="'+cls+'" title="'+key+': '+dayTotal+'">'+d.getDate()+'</div>';
+function renderGamification(stats, sorted, elapsed, grandTotal, allData) {
+  // TAGESSIEGER
+  var todayLeader = sorted[0];
+  for(var i=1; i<sorted.length; i++) {
+    if(stats[sorted[i]].todayTotal > stats[todayLeader].todayTotal) todayLeader = sorted[i];
   }
-  document.getElementById('calGrid').innerHTML=cells;
+  var todayMax = stats[todayLeader].todayTotal;
+  if(todayMax>0) {
+    document.getElementById('tagessiegerWrap').style.display='flex';
+    document.getElementById('tagessiegerAvatar').src = '/'+todayLeader+'.png';
+    document.getElementById('tagessiegerText').textContent =
+      USERS[todayLeader].name+' führt heute mit '+todayMax+' Liegestützen'
+      +(todayMax>=100?' — Tagesziel erreicht! ✓':' — noch '+(GOAL-todayMax)+' fehlen');
+  } else {
+    document.getElementById('tagessiegerWrap').style.display='none';
+  }
+
+  // COMEBACK
+  var leader = sorted[0]; var leaderDays = stats[leader].goalDays;
+  var comebackHtml = '';
+  for(var i=1; i<sorted.length; i++) {
+    var uid = sorted[i]; var gap = leaderDays - stats[uid].goalDays;
+    if(gap>0 && gap<=10) {
+      var pct = Math.round(stats[uid].goalDays / Math.max(1,leaderDays) * 100);
+      comebackHtml += '<div class="comeback-row">'
+        +'<img src="/'+uid+'.png" style="width:24px;height:24px;border-radius:50%;object-fit:cover;object-position:top;flex-shrink:0"/>'
+        +'<span style="width:60px;font-weight:500">'+USERS[uid].name+'</span>'
+        +'<div class="comeback-bar-bg"><div class="comeback-bar-fill" style="width:'+pct+'%;background:'+USERS[uid].color+'"></div></div>'
+        +'<span style="font-size:12px;color:rgba(245,245,245,0.4);white-space:nowrap">'+gap+' Tag'+(gap!==1?'e':'')+' zurück</span>'
+        +'</div>';
+    }
+  }
+  if(comebackHtml && elapsed>0){ document.getElementById('comebackWrap').style.display='block'; document.getElementById('comebackRows').innerHTML=comebackHtml; }
+  else document.getElementById('comebackWrap').style.display='none';
+
+  // NEMESIS
+  if(sorted.length>1) {
+    var second = sorted[1]; var gap = stats[sorted[0]].goalDays - stats[second].goalDays;
+    if(gap<=10) {
+      document.getElementById('nemesisWrap').style.display='flex';
+      document.getElementById('nemesisAvatar').src = '/'+second+'.png';
+      document.getElementById('nemesisInfo').textContent =
+        USERS[second].name+' ist nur '+gap+' Tag'+(gap!==1?'e':'')+' hinter '+USERS[sorted[0]].name
+        +' — '+stats[second].total.toLocaleString('de')+' vs '+stats[sorted[0]].total.toLocaleString('de')+' Liegestütze.'
+        +(gap===0?' Gleichstand!':'');
+    } else document.getElementById('nemesisWrap').style.display='none';
+  }
+
+  // RECORDS
+  var largestSet=0, largestHolder='', bestDay=0, bestDayHolder='', bestStreak=0, bestStreakHolder='';
+  var uids = ['flo','patrick','dominik'];
+  for(var i=0; i<uids.length; i++) {
+    var uid = uids[i]; var udata = (allData&&allData[uid])||{}; var s = stats[uid];
+    if(s.bestStreak>bestStreak){ bestStreak=s.bestStreak; bestStreakHolder=USERS[uid].name; }
+    var keys = Object.keys(udata);
+    for(var ki=0; ki<keys.length; ki++) {
+      var key = keys[ki]; var sets = udata[key]||[];
+      var dayTotal = sets.reduce(function(a,s){ return a+s.reps; }, 0);
+      if(dayTotal>bestDay){ bestDay=dayTotal; bestDayHolder=USERS[uid].name+' · '+new Date(key).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}); }
+      for(var si=0; si<sets.length; si++) { if(sets[si].reps>largestSet){ largestSet=sets[si].reps; largestHolder=USERS[uid].name; } }
+    }
+  }
+  document.getElementById('recLargestSet').textContent = largestSet||'—';
+  document.getElementById('recLargestHolder').textContent = largestHolder;
+  document.getElementById('recBestDay').textContent = bestDay||'—';
+  document.getElementById('recBestHolder').textContent = bestDayHolder;
+  document.getElementById('recBestStreak').textContent = bestStreak?bestStreak+'d':'—';
+  document.getElementById('recStreakHolder').textContent = bestStreakHolder;
+
+  // MILESTONE MARATHON
+  document.getElementById('milestoneTotal').textContent = grandTotal.toLocaleString('de');
+  var pct = Math.min(100, grandTotal/10000*100);
+  document.getElementById('milestoneFill').style.width = pct+'%';
+  var markerHtml = '';
+  for(var mi=0; mi<MILESTONES.length; mi++) {
+    var m = MILESTONES[mi]; var reached = grandTotal>=m.val; var pos = m.val/10000*100;
+    markerHtml += '<div class="milestone-marker" style="left:'+pos+'%;color:'+m.color+'" title="'+m.desc+'">'
+      +'<div class="milestone-dot'+(reached?' reached':'')+'" style="background:'+(reached?m.color:'rgba(255,255,255,0.15)')+';border-color:'+(reached?m.color:'rgba(255,255,255,0.2)')+'"></div>'
+      +'</div>';
+  }
+  document.getElementById('milestoneMarkers').innerHTML = markerHtml;
+  var next = null;
+  for(var mi=0; mi<MILESTONES.length; mi++) { if(grandTotal<MILESTONES[mi].val){ next=MILESTONES[mi]; break; } }
+  document.getElementById('milestoneNext').textContent = next
+    ? 'Noch '+(next.val-grandTotal).toLocaleString('de')+' Liegestütze bis: '+next.icon+' '+next.desc
+    : '🏆 Marathon abgeschlossen! Ihr seid Legenden.';
 }
 
-async function showDetailUser(uid,el){
-  detailUser=uid;
-  document.querySelectorAll('.user-detail-tab').forEach(t=>t.classList.remove('active'));
+async function showCalUser(uid, el) {
+  calUser=uid;
+  document.querySelectorAll('.cal-user-tab').forEach(function(t){ t.classList.remove('active'); });
   el.classList.add('active');
-  renderDetailView(uid,await fetchDB());
+  renderCalendar(uid, await fetchDB());
+}
+function renderCalendar(uid, allData) {
+  var udata = (allData&&allData[uid])||{};
+  var td = today(); var elapsed = daysSince(CHALLENGE_START);
+  var windowStart = elapsed<35 ? new Date(CHALLENGE_START) : new Date(CHALLENGE_START.getTime()+(elapsed-34)*864e5);
+  var cells = '';
+  for(var i=0; i<35; i++) {
+    var d = new Date(windowStart); d.setDate(d.getDate()+i);
+    var key = d.toLocaleDateString('sv-SE',{timeZone:'Europe/Berlin'});
+    var sets = udata[key]||[];
+    var dayTotal = sets.reduce(function(a,s){ return a+s.reps; }, 0);
+    var isToday=(key===td); var isFuture=(key>td);
+    var cls='cal-day';
+    if(isFuture) cls+=' future';
+    else if(dayTotal>=GOAL) cls+=' hit';
+    else if(dayTotal>0) cls+=' partial';
+    else cls+=' miss';
+    if(isToday) cls+=' today-marker';
+    cells += '<div class="'+cls+'" title="'+key+': '+dayTotal+'">'+d.getDate()+'</div>';
+  }
+  document.getElementById('calGrid').innerHTML = cells;
 }
 
-function renderDetailView(uid,allData){
-  const udata=(allData&&allData[uid])||{};
-  const elapsed=daysSince(CHALLENGE_START);
-  const days=[];
-  const todayStr=today();
-  for(let i=0;i<=elapsed+1;i++){
-    const d=new Date(CHALLENGE_START);d.setDate(d.getDate()+i);
-    const key=d.toISOString().slice(0,10);
-    if(key>todayStr)break;
-    const sets=udata[key]||[];
-    if(sets.length>0)days.push({key,sets,d});
+async function showDetailUser(uid, el) {
+  detailUser=uid;
+  document.querySelectorAll('.user-detail-tab').forEach(function(t){ t.classList.remove('active'); });
+  el.classList.add('active');
+  renderDetailView(uid, await fetchDB());
+}
+function renderDetailView(uid, allData) {
+  var udata=(allData&&allData[uid])||{};
+  var elapsed=daysSince(CHALLENGE_START); var todayStr=today();
+  var days=[];
+  for(var i=0; i<=elapsed+1; i++) {
+    var d=new Date(CHALLENGE_START); d.setDate(d.getDate()+i);
+    var key=d.toLocaleDateString('sv-SE',{timeZone:'Europe/Berlin'});
+    if(key>todayStr) break;
+    var sets=udata[key]||[];
+    if(sets.length>0) days.push({key:key, sets:sets, d:d});
   }
   days.reverse();
   if(days.length===0){
     document.getElementById('detailDayList').innerHTML='<p style="font-size:13px;color:rgba(245,245,245,0.3);text-align:center;padding:2rem">Noch keine Einträge.</p>';
     return;
   }
-  document.getElementById('detailDayList').innerHTML=days.map(function(day,i){
-    const total=day.sets.reduce(function(a,s){return a+s.reps;},0);
-    const hit=total>=GOAL;
-    const dateStr=day.d.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
-    const statusColor=hit?'#B1EC04':total>0?'#FBB314':'#EE1C25';
-    const setsHtml=day.sets.map(function(s){
-      let ts=s.time||'--:--';
-      if(s.ts){const dt=new Date(s.ts);ts=dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
-      return '<div class="detail-set-line">'
+  var html='';
+  for(var i=0; i<days.length; i++) {
+    var day=days[i];
+    var total=day.sets.reduce(function(a,s){ return a+s.reps; }, 0);
+    var dateStr=day.d.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
+    var statusColor=total>=GOAL?'#B1EC04':total>0?'#FBB314':'#EE1C25';
+    var setsHtml='';
+    for(var si=0; si<day.sets.length; si++) {
+      var s=day.sets[si]; var ts=s.time||'--:--';
+      if(s.ts){ var dt=new Date(s.ts); ts=dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
+      setsHtml+='<div class="detail-set-line">'
         +'<span style="color:#B1EC04;font-weight:600">+'+s.reps+' Liegestütze</span>'
         +'<span style="color:rgba(245,245,245,0.35)">'+ts+'</span></div>';
-    }).join('');
-    return '<div class="detail-day-item">'
+    }
+    html+='<div class="detail-day-item">'
       +'<div class="detail-day-header" onclick="toggleDayDetail(\'day-'+i+'\')">'
       +'<span style="font-size:13px;font-weight:500">'+dateStr+'</span>'
       +'<div style="display:flex;align-items:center;gap:8px">'
@@ -711,200 +907,19 @@ function renderDetailView(uid,allData){
       +'</div></div>'
       +'<div class="detail-day-sets" id="day-'+i+'">'+setsHtml+'</div>'
       +'</div>';
-  }).join('');
-}
-
-function toggleDayDetail(id){
-  document.getElementById(id).classList.toggle('open');
-}
-
-
-const BADGE_INFO = {
-  crown: {cls:'badge-crown', icon:'👑', label:'30 Tage', title:'Eiserne Disziplin', desc:'30 Tage Streak ohne Unterbrechung'},
-  skull: {cls:'badge-skull', icon:'💀', label:'7 Streak', title:'Unnachgiebig', desc:'7 Tage am Stück das Ziel erreicht'},
-  fire3: {cls:'badge-fire', icon:'🔥', label:'', title:'On Fire', desc:'3+ Tage Streak — halte durch!'},
-  thousand: {cls:'badge-thousand', icon:'💪', label:'1K', title:'1.000 Liegestütze', desc:'Insgesamt 1.000 Liegestütze absolviert'},
-  fivek: {cls:'badge-thousand', icon:'🦾', label:'5K', title:'5.000 Liegestütze', desc:'Insgesamt 5.000 Liegestütze — Respekt!'},
-  tenk: {cls:'badge-crown', icon:'🏆', label:'10K', title:'10.000 Liegestütze', desc:'Die absolute Elite. Legendenstatus.'},
-};
-
-function getBadges(stats, uid) {
-  const s = stats[uid];
-  const badges = [];
-  if(s.bestStreak >= 30) badges.push({...BADGE_INFO.crown, label:'30d'});
-  if(s.bestStreak >= 7) badges.push({...BADGE_INFO.skull, label:'7d'});
-  if(s.bestStreak >= 3) badges.push({...BADGE_INFO.fire3, label:s.bestStreak+'d'});
-  if(s.total >= 10000) badges.push(BADGE_INFO.tenk);
-  else if(s.total >= 5000) badges.push(BADGE_INFO.fivek);
-  else if(s.total >= 1000) badges.push(BADGE_INFO.thousand);
-  return badges;
-}
-
-function renderGamification(stats, sorted, elapsed) {
-  // TAGESSIEGER
-  const todayLeader = sorted.reduce((a,b) => stats[a].todayTotal >= stats[b].todayTotal ? a : b);
-  const todayMax = stats[todayLeader].todayTotal;
-  if(todayMax > 0) {
-    document.getElementById('tagessiegerWrap').style.display='flex';
-    document.getElementById('tagessiegerAvatar').src = '/'+todayLeader+'.png';
-    const pct = Math.round(todayMax/100*100);
-    document.getElementById('tagessiegerText').innerHTML =
-      '<strong style="color:var(--yellow)">'+USERS[todayLeader].name+'</strong> führt heute mit '+todayMax+' Liegestützen'
-      +(todayMax>=100?' — Tagesziel erreicht! ✓':'  — '+Math.max(0,100-todayMax)+' fehlen noch');
-  } else {
-    document.getElementById('tagessiegerWrap').style.display='none';
   }
-
-  // COMEBACK / HEAD-TO-HEAD
-  const leader = sorted[0];
-  const leaderDays = stats[leader].goalDays;
-  const others = sorted.slice(1).filter(uid => leaderDays - stats[uid].goalDays <= 10 && leaderDays - stats[uid].goalDays > 0);
-  
-  if(others.length > 0 && elapsed > 0) {
-    document.getElementById('comebackWrap').style.display='block';
-    document.getElementById('comebackRows').innerHTML = others.map(uid => {
-      const gap = leaderDays - stats[uid].goalDays;
-      const pct = Math.round(stats[uid].goalDays / Math.max(1,leaderDays) * 100);
-      return '<div class="comeback-row">'
-        +'<img src="/'+uid+'.png" style="width:24px;height:24px;border-radius:50%;object-fit:cover;object-position:top;flex-shrink:0"/>'
-        +'<span style="width:60px;font-weight:500">'+USERS[uid].name+'</span>'
-        +'<div class="comeback-bar-bg"><div class="comeback-bar-fill" style="width:'+pct+'%;background:'+USERS[uid].color+'"></div></div>'
-        +'<span style="font-size:12px;color:rgba(245,245,245,0.4);white-space:nowrap">'+gap+' Tag'+(gap>1?'e':'')+' zurück</span>'
-        +'</div>';
-    }).join('');
-  } else {
-    document.getElementById('comebackWrap').style.display='none';
-  }
+  document.getElementById('detailDayList').innerHTML=html;
 }
+function toggleDayDetail(id){ document.getElementById(id).classList.toggle('open'); }
 
-
-// Hidden file input for camera
-const fileInput = document.createElement('input');
-fileInput.type = 'file';
-fileInput.accept = 'image/*';
-fileInput.capture = 'environment';
-fileInput.style.display = 'none';
-document.body.appendChild(fileInput);
-let pendingPhotoSetIndex = null;
-
-async function uploadPhoto(setIdx) {
-  pendingPhotoSetIndex = setIdx;
-  fileInput.click();
-}
-
-fileInput.addEventListener('change', async () => {
-  const file = fileInput.files[0];
-  if (!file || pendingPhotoSetIndex === null) return;
-  const idx = pendingPhotoSetIndex;
-  pendingPhotoSetIndex = null;
-  fileInput.value = '';
-
-  const slot = document.getElementById('photo-slot-' + idx);
-  if (slot) slot.innerHTML = '<span class="photo-uploading">⏳ Wird hochgeladen...</span>';
-
-  try {
-    // Compress image using Canvas
-    const compressed = await compressImage(file, 800, 0.75);
-    const td = today();
-
-    const formData = new FormData();
-    formData.append('file', compressed, 'photo.jpg');
-    formData.append('uid', currentUser);
-    formData.append('date', td);
-    formData.append('setIndex', String(idx));
-
-    const res = await fetch('/api/upload', { method: 'POST', body: formData });
-    const data = await res.json();
-
-    if (!data.ok) throw new Error(data.error);
-
-    // Save photo URL to set data
-    const db = await fetchDB();
-    const sets = [...((db[currentUser] || {})[td] || [])];
-    if (sets[idx]) {
-      sets[idx].photo = data.url;
-      await saveUserDay(currentUser, td, sets);
-    }
-    renderLog();
-  } catch (err) {
-    console.error('Upload failed:', err);
-    toast('Upload fehlgeschlagen ❌');
-    renderLog();
-  }
-});
-
-function compressImage(file, maxSize, quality) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = () => {
-      URL.revokeObjectURL(url);
-      const canvas = document.createElement('canvas');
-      let w = img.width, h = img.height;
-      if (w > h && w > maxSize) { h = h * maxSize / w; w = maxSize; }
-      else if (h > maxSize) { w = w * maxSize / h; h = maxSize; }
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      canvas.toBlob(blob => resolve(new File([blob], 'photo.jpg', { type: 'image/jpeg' })), 'image/jpeg', quality);
-    };
-    img.src = url;
-  });
-}
-
-function openLightbox(url) {
-  const lb = document.createElement('div');
-  lb.className = 'photo-lightbox';
-  lb.innerHTML = '<img src="' + url + '"/>';
-  lb.onclick = () => document.body.removeChild(lb);
-  document.body.appendChild(lb);
-}
-
-function toggleBadgeTip(el) {
-  const isActive = el.classList.contains('active');
-  document.querySelectorAll('.badge-wrap.active').forEach(e=>e.classList.remove('active'));
-  if(!isActive) el.classList.add('active');
-}
-document.addEventListener('click', e=>{
-  if(!e.target.closest('.badge-wrap')) {
-    document.querySelectorAll('.badge-wrap.active').forEach(e=>e.classList.remove('active'));
-  }
-});
-
-function toggleComment(id) {
-  const panel = document.getElementById(id);
-  if(panel) panel.classList.toggle('open');
-}
-
-async function addComment(setIdx) {
-  const inputEl = document.getElementById('comment-input-' + setIdx);
-  const text = inputEl.value.trim();
-  if(!text) return;
-
-  const db = await fetchDB();
-  const td = today();
-  // Comments can be added to any user's sets — we need to know whose set it is
-  const sets = [...((db[currentUser]||{})[td]||[])];
-  if(!sets[setIdx]) return;
-  if(!sets[setIdx].comments) sets[setIdx].comments = [];
-  sets[setIdx].comments.push({
-    uid: currentUser,
-    text,
-    time: getTimeStr(),
-    ts: Date.now()
-  });
-  await saveUserDay(currentUser, td, sets);
-  inputEl.value = '';
-  renderLog();
-  // Re-open the comment panel after re-render
-  setTimeout(()=>{
-    const panel = document.getElementById('comment-' + setIdx);
-    if(panel) panel.classList.add('open');
-  }, 100);
-}
-
-// Init
 renderLog();
 initNotifications();
+
+if('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
 </script>
 </body>
 </html>
