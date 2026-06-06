@@ -184,6 +184,24 @@ app.get("/qr", (req, res) => {
   }
 });
 
+app.get("/qr-page", (req, res) => {
+  if (!qrCodeData) {
+    return res.send(client.info
+      ? `<h2>✅ Already authenticated as ${client.info.wid.user}</h2>`
+      : `<h2>⏳ QR not ready yet – refresh in a few seconds</h2>`
+    );
+  }
+  res.send(`<!DOCTYPE html><html><head><title>PUSH365 QR</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>body{font-family:sans-serif;display:flex;flex-direction:column;align-items:center;padding:40px;background:#111;color:#fff}
+  #qrcode{background:white;padding:20px;border-radius:12px;margin:20px 0}</style></head>
+  <body><h1>📱 PUSH365 WhatsApp Bot</h1>
+  <p>Scan mit WhatsApp → Einstellungen → Verknüpfte Geräte</p>
+  <div id="qrcode"></div>
+  <script>new QRCode(document.getElementById("qrcode"),{text:${JSON.stringify(qrCodeData)},width:256,height:256});
+  setTimeout(()=>location.reload(),15000);</script></body></html>`);
+});
+
 // Nachricht senden via API
 app.post("/send", async (req, res) => {
   const apiKey = req.headers["x-api-key"];
