@@ -386,6 +386,394 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
   </div>
 </div>
 <div class="toast" id="toast"></div>
+E html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PUSH365 Challenge</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2303020C'/%3E%3Ctext x='32' y='46' font-size='38' text-anchor='middle' fill='%23C62CB0'%3E%F0%9F%92%AA%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#03020C;--pink:#C62CB0;--white:#F5F5F5;--yellow:#FBB314;--lime:#B1EC04;--red:#EE1C25;--card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08)}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(3,2,12,0.92);backdrop-filter:blur(12px);z-index:100}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;background:linear-gradient(90deg,var(--pink),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:4px}
+.nav-tab{padding:6px 16px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(245,245,245,0.5);transition:all .2s;border:none;background:transparent}
+.nav-tab.active{background:var(--pink);color:var(--white)}
+.user-select{display:flex;gap:1rem;justify-content:center;padding:2rem 2rem 1rem;flex-wrap:wrap}
+.user-pill{display:flex;align-items:center;gap:10px;padding:10px 20px;border-radius:50px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;background:var(--card);font-weight:500;font-size:14px}
+.user-pill:hover{border-color:var(--pink)}
+.user-pill.selected{border-color:var(--pink);background:rgba(198,44,176,0.15)}
+.uavatar{width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:top;flex-shrink:0}
+main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
+.log-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:2rem}
+.log-card h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1.5rem}
+.today-total{display:flex;align-items:baseline;gap:8px;margin-bottom:1.5rem}
+.today-number{font-family:'Bebas Neue',sans-serif;font-size:4rem;line-height:1}
+.today-label{font-size:13px;color:rgba(245,245,245,0.5);text-transform:uppercase;letter-spacing:1px}
+.goal-bar-wrap{margin-bottom:1.5rem}
+.goal-bar-bg{height:8px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden}
+.goal-bar-fill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.goal-label{font-size:12px;color:rgba(245,245,245,0.4);margin-top:6px}
+.sets-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem}
+.set-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:10px;font-size:13px}
+.set-time{color:rgba(245,245,245,0.4);font-size:12px}
+.set-count{font-weight:600;color:var(--lime)}
+.set-delete{background:none;border:none;color:rgba(245,245,245,0.2);cursor:pointer;font-size:18px;padding:0 4px;transition:color .2s;line-height:1}
+.set-delete:hover{color:var(--red)}
+.input-row{display:flex;gap:10px}
+.reps-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:12px;color:var(--white);font-size:1.1rem;font-family:'DM Sans',sans-serif;padding:12px 16px;outline:none;transition:border-color .2s}
+.reps-input:focus{border-color:var(--pink)}
+.reps-input::placeholder{color:rgba(245,245,245,0.2)}
+.log-btn{padding:12px 28px;background:var(--pink);border:none;border-radius:12px;color:var(--white);font-weight:600;font-size:15px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.log-btn:hover{background:#d930c0;transform:translateY(-1px)}
+.log-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.quick-btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
+.quick-btn{padding:7px 14px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:rgba(245,245,245,0.6);font-size:13px;cursor:pointer;transition:all .2s}
+.quick-btn:hover{background:rgba(251,179,20,0.15);border-color:var(--yellow);color:var(--yellow)}
+.video-card{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:2rem}
+.video-header{padding:1.2rem 1.5rem;display:flex;align-items:center;gap:10px}
+.video-header h3{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px}
+.video-tag{font-size:11px;padding:3px 10px;background:rgba(238,28,37,0.2);border:1px solid rgba(238,28,37,0.4);border-radius:99px;color:var(--red);font-weight:600}
+.video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden}
+.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%}
+.dashboard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.2rem}
+.stat-card .label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(245,245,245,0.4);margin-bottom:8px}
+.stat-card .value{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;line-height:1}
+.stat-card .sub{font-size:12px;color:rgba(245,245,245,0.4);margin-top:4px}
+.leaderboard{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
+.lb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem}
+.lb-header h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px}
+.lb-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.lb-row:last-child{border-bottom:none}
+.lb-rank{font-size:1.4rem;width:28px;text-align:center}
+.lb-info{flex:1}
+.lb-name{font-weight:600;font-size:15px}
+.lb-meta{font-size:12px;color:rgba(245,245,245,0.4);margin-top:2px}
+.lb-score{text-align:right}
+.lb-total{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1}
+.lb-streak{font-size:11px;color:rgba(245,245,245,0.4);margin-top:2px}
+.cal-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
+.cal-wrap h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1rem}
+.cal-user-tabs{display:flex;gap:6px;margin-bottom:1.2rem}
+.cal-user-tab{padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(245,245,245,0.4);border:1px solid var(--border);background:transparent;transition:all .2s}
+.cal-user-tab.active{color:var(--white);border-color:var(--pink);background:rgba(198,44,176,0.15)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500}
+.cal-day.hit{background:var(--lime);color:#0a1a00}
+.cal-day.miss{background:rgba(238,28,37,0.15);color:rgba(238,28,37,0.5)}
+.cal-day.partial{background:rgba(251,179,20,0.2);color:var(--yellow)}
+.cal-day.future{background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.15)}
+.cal-day.today-marker{box-shadow:0 0 0 2px var(--pink)}
+.cal-legend{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.cal-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(245,245,245,0.5)}
+.cal-dot{width:10px;height:10px;border-radius:2px}
+.user-detail-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
+.user-detail-wrap h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1rem}
+.user-detail-tabs{display:flex;gap:6px;margin-bottom:1.2rem}
+.user-detail-tab{padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(245,245,245,0.4);border:1px solid var(--border);background:transparent;transition:all .2s}
+.user-detail-tab.active{color:var(--white);border-color:var(--pink);background:rgba(198,44,176,0.15)}
+.detail-day-list{display:flex;flex-direction:column;gap:8px;max-height:450px;overflow-y:auto;padding-right:4px}
+.detail-day-item{background:rgba(255,255,255,0.03);border-radius:12px;overflow:hidden}
+.detail-day-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;transition:background .2s}
+.detail-day-header:hover{background:rgba(255,255,255,0.04)}
+.detail-day-sets{padding:0 14px 10px;display:none}
+.detail-day-sets.open{display:block}
+.detail-set-line{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.detail-set-line:last-child{border-bottom:none}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--lime);color:#0a1a00;padding:12px 24px;border-radius:12px;font-weight:600;font-size:14px;transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:999;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600}
+.status-done{background:rgba(177,236,4,0.15);color:var(--lime);border:1px solid rgba(177,236,4,0.3)}
+.status-going{background:rgba(251,179,20,0.15);color:var(--yellow);border:1px solid rgba(251,179,20,0.3)}
+.status-none{background:rgba(238,28,37,0.1);color:rgba(238,28,37,0.6);border:1px solid rgba(238,28,37,0.2)}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:rgba(245,245,245,0.3);margin-bottom:1rem}
+.loading{text-align:center;padding:2rem;color:rgba(245,245,245,0.3);font-size:14px}
+.notif-banner{background:rgba(198,44,176,0.1);border:1px solid rgba(198,44,176,0.3);border-radius:16px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.notif-banner p{font-size:13px;color:rgba(245,245,245,0.7)}
+.notif-btn{padding:8px 18px;background:var(--pink);border:none;border-radius:8px;color:var(--white);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.notif-btn:hover{background:#d930c0}
+.notif-dismiss{background:none;border:none;color:rgba(245,245,245,0.3);cursor:pointer;font-size:18px;padding:0 4px}
+#winnerScreen{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto}
+.winner-wrap{max-width:700px;margin:0 auto;padding:3rem 2rem;text-align:center}
+.winner-title{font-family:'Bebas Neue',sans-serif;font-size:5rem;letter-spacing:4px;background:linear-gradient(90deg,var(--pink),var(--yellow),var(--lime));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.5rem}
+.winner-sub{font-size:14px;color:rgba(245,245,245,0.4);text-transform:uppercase;letter-spacing:3px;margin-bottom:3rem}
+.winner-podium{display:flex;align-items:flex-end;justify-content:center;gap:1rem;margin-bottom:3rem}
+.podium-place{display:flex;flex-direction:column;align-items:center;gap:12px}
+.podium-bar{width:100px;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:2rem;padding-top:12px}
+.podium-1 .podium-bar{height:160px;background:linear-gradient(180deg,rgba(251,179,20,0.3),rgba(251,179,20,0.1));border:1px solid rgba(251,179,20,0.4);color:var(--yellow)}
+.podium-2 .podium-bar{height:110px;background:linear-gradient(180deg,rgba(245,245,245,0.15),rgba(245,245,245,0.05));border:1px solid rgba(245,245,245,0.2);color:rgba(245,245,245,0.6)}
+.podium-3 .podium-bar{height:75px;background:linear-gradient(180deg,rgba(205,127,50,0.2),rgba(205,127,50,0.05));border:1px solid rgba(205,127,50,0.3);color:#cd7f32}
+.winner-msg{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:2rem;text-align:left}
+.winner-msg h3{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:1px;margin-bottom:1rem;color:var(--yellow)}
+.winner-msg p{font-size:14px;line-height:1.8;color:rgba(245,245,245,0.8)}
+.winner-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:199}
+@media(max-width:600px){nav{padding:1rem}main{padding:1rem 1rem 4rem}.user-select{flex-direction:column;align-items:center}.dashboard-grid{grid-template-columns:1fr 1fr}.winner-title{font-size:3rem}}
+
+/* GAMIFICATION */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:99px;font-size:11px;font-weight:700;margin:2px}
+.badge-fire{background:rgba(238,28,37,0.15);color:#EE1C25;border:1px solid rgba(238,28,37,0.3)}
+.badge-skull{background:rgba(198,44,176,0.15);color:#C62CB0;border:1px solid rgba(198,44,176,0.3)}
+.badge-crown{background:rgba(251,179,20,0.15);color:#FBB314;border:1px solid rgba(251,179,20,0.3)}
+.badge-thousand{background:rgba(177,236,4,0.15);color:#B1EC04;border:1px solid rgba(177,236,4,0.3)}
+.badge-tagessieger{background:rgba(251,179,20,0.2);color:#FBB314;border:1px solid rgba(251,179,20,0.4);font-size:12px;padding:4px 10px}
+
+.tagessieger-wrap{background:linear-gradient(135deg,rgba(251,179,20,0.1),rgba(251,179,20,0.03));border:1px solid rgba(251,179,20,0.3);border-radius:16px;padding:1rem 1.5rem;margin-bottom:2rem;display:flex;align-items:center;gap:12px}
+.tagessieger-wrap h3{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--yellow)}
+.tagessieger-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid var(--yellow)}
+
+.comeback-wrap{background:rgba(198,44,176,0.06);border:1px solid rgba(198,44,176,0.2);border-radius:16px;padding:1rem 1.5rem;margin-bottom:2rem}
+.comeback-wrap h3{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--pink);margin-bottom:8px}
+.comeback-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:13px}
+.comeback-row:last-child{margin-bottom:0}
+.comeback-bar-bg{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden}
+.comeback-bar-fill{height:100%;border-radius:99px}
+
+.milestone-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+
+/* PHOTO UPLOAD */
+.photo-btn{background:none;border:1px solid var(--border);border-radius:8px;color:rgba(245,245,245,0.4);cursor:pointer;font-size:13px;padding:4px 10px;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.photo-btn:hover{border-color:var(--pink);color:var(--pink)}
+.photo-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;cursor:pointer;border:1px solid var(--border);transition:transform .2s}
+.photo-thumb:hover{transform:scale(1.05)}
+.photo-uploading{opacity:0.5;font-size:12px;color:rgba(245,245,245,0.4)}
+.photo-lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:500;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.photo-lightbox img{max-width:90vw;max-height:90vh;border-radius:12px;object-fit:contain}
+
+/* BADGE TOOLTIPS */
+.badge-wrap{position:relative;display:inline-flex}
+.badge-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1a1a2e;border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:12px;color:var(--white);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;z-index:50;text-align:center;min-width:160px}
+.badge-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1a1a2e}
+.badge-tip strong{display:block;color:var(--yellow);margin-bottom:3px;font-size:13px}
+.badge-wrap:hover .badge-tip{opacity:1}
+.badge-wrap.active .badge-tip{opacity:1}
+
+/* COMMENTS */
+.comment-btn{background:none;border:1px solid var(--border);border-radius:8px;color:rgba(245,245,245,0.4);cursor:pointer;font-size:12px;padding:4px 8px;transition:all .2s;display:inline-flex;align-items:center;gap:4px}
+.comment-btn:hover{border-color:var(--pink);color:var(--pink)}
+.comment-btn.has-comments{border-color:rgba(198,44,176,0.4);color:var(--pink)}
+.comment-panel{margin-top:8px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:10px;display:none}
+.comment-panel.open{display:block}
+.comment-item{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.comment-item:last-of-type{border-bottom:none}
+.comment-author{font-weight:600;font-size:12px;flex-shrink:0}
+.comment-text{color:rgba(245,245,245,0.8);flex:1}
+.comment-time{font-size:11px;color:rgba(245,245,245,0.3);flex-shrink:0}
+.comment-input-row{display:flex;gap:8px;margin-top:8px}
+.comment-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:13px;font-family:'DM Sans',sans-serif;padding:7px 10px;outline:none;transition:border-color .2s}
+.comment-input:focus{border-color:var(--pink)}
+.comment-input::placeholder{color:rgba(245,245,245,0.2)}
+.comment-send{padding:7px 14px;background:var(--pink);border:none;border-radius:8px;color:var(--white);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.comment-send:hover{background:#d930c0}
+
+/* NEMESIS + LONGEST SET + RECORDS + MILESTONE */
+.nemesis-wrap{background:linear-gradient(135deg,rgba(238,28,37,0.08),rgba(198,44,176,0.08));border:1px solid rgba(238,28,37,0.25);border-radius:16px;padding:1.2rem 1.5rem;margin-bottom:2rem;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.nemesis-wrap h3{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--red);white-space:nowrap}
+.nemesis-info{flex:1;font-size:13px;color:rgba(245,245,245,0.7)}
+.nemesis-info strong{color:var(--white)}
+.nemesis-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid var(--red);flex-shrink:0}
+
+.records-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.record-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.2rem;text-align:center}
+.record-card .r-icon{font-size:1.8rem;margin-bottom:6px}
+.record-card .r-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(245,245,245,0.4);margin-bottom:6px}
+.record-card .r-value{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1}
+.record-card .r-holder{font-size:12px;color:rgba(245,245,245,0.5);margin-top:4px}
+
+.milestone-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:2rem}
+.milestone-wrap h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:1.2rem}
+.milestone-track{position:relative;height:8px;background:rgba(255,255,255,0.06);border-radius:99px;margin:2rem 0 1rem}
+.milestone-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--pink),var(--yellow),var(--lime));transition:width .8s cubic-bezier(.4,0,.2,1)}
+.milestone-marker{position:absolute;top:50%;transform:translate(-50%,-50%);cursor:default}
+.milestone-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--bg);transition:all .2s}
+.milestone-dot.reached{box-shadow:0 0 8px currentColor}
+.milestone-labels{display:flex;justify-content:space-between;font-size:11px;color:rgba(245,245,245,0.4)}
+.milestone-current{text-align:center;margin-bottom:1rem}
+.milestone-current .big{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--lime);line-height:1}
+.milestone-current .sub{font-size:13px;color:rgba(245,245,245,0.5)}
+.milestone-next{background:rgba(251,179,20,0.08);border:1px solid rgba(251,179,20,0.2);border-radius:10px;padding:10px 14px;font-size:13px;color:rgba(245,245,245,0.7);text-align:center;margin-top:8px}
+.milestone-next strong{color:var(--yellow)}
+
+@media(max-width:600px){.records-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+<nav>
+  <div class="logo">PUSH365</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showTab('log',this)">Loggen</button>
+    <button class="nav-tab" onclick="showTab('dashboard',this)">Dashboard</button>
+  </div>
+</nav>
+<div class="user-select">
+  <div class="user-pill selected" onclick="selectUser('flo')" id="pill-flo">
+    <img src="/flo.png" class="uavatar"/><span>Flo</span>
+  </div>
+  <div class="user-pill" onclick="selectUser('patrick')" id="pill-patrick">
+    <img src="/patrick.png" class="uavatar"/><span>Patrick</span>
+  </div>
+  <div class="user-pill" onclick="selectUser('dominik')" id="pill-dominik">
+    <img src="/dominik.png" class="uavatar"/><span>Dominik</span>
+  </div>
+</div>
+<main>
+  <div id="tab-log">
+    <div id="notifBanner" class="notif-banner" style="display:none">
+      <p><strong>🔔 Tägliche Erinnerung</strong><br>Aktiviere Push-Benachrichtigungen damit wir dich täglich an deine Liegestütze erinnern.</p>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="notif-btn" onclick="requestNotifPermission()">Aktivieren</button>
+        <button class="notif-dismiss" onclick="dismissNotifBanner()">×</button>
+      </div>
+    </div>
+    <div class="log-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+        <h2>Heute loggen</h2>
+        <span id="todayStatus" class="status-badge status-none">0 / 100</span>
+      </div>
+      <div class="today-total">
+        <span class="today-number" id="todayTotal">0</span>
+        <span class="today-label">Liegestütze heute</span>
+      </div>
+      <div class="goal-bar-wrap">
+        <div class="goal-bar-bg"><div class="goal-bar-fill" id="goalBar" style="width:0%;background:#EE1C25"></div></div>
+        <div class="goal-label" id="goalLabel">0 von 100 — noch 100 übrig</div>
+      </div>
+      <div id="setsList" class="sets-list"></div>
+      <div class="input-row">
+        <input type="number" id="repsInput" class="reps-input" placeholder="Anzahl Liegestütze..." min="1" max="500"/>
+        <button class="log-btn" id="logBtn" onclick="logSet()">+ Satz</button>
+      </div>
+      <div class="quick-btns">
+        <span class="section-label" style="margin:0;align-self:center">Schnell:</span>
+        <button class="quick-btn" onclick="quickLog(10)">10</button>
+        <button class="quick-btn" onclick="quickLog(15)">15</button>
+        <button class="quick-btn" onclick="quickLog(20)">20</button>
+        <button class="quick-btn" onclick="quickLog(25)">25</button>
+        <button class="quick-btn" onclick="quickLog(30)">30</button>
+        <button class="quick-btn" onclick="quickLog(50)">50</button>
+      </div>
+    </div>
+    <div class="video-card">
+      <div class="video-header">
+        <h3>Richtige Technik</h3>
+        <span class="video-tag">▶ TUTORIAL</span>
+      </div>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/JvX0ilRCBrU?si=eW6A6Gdwy5NoOSAe" title="Liegestütze Technik" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+  <div id="tab-dashboard" style="display:none">
+    <p class="section-label">Gesamtübersicht · 365-Tage-Challenge ab 04.06.2026</p>
+    <div class="dashboard-grid" id="statsGrid"><div class="loading">Lade Daten...</div></div>
+    <div class="leaderboard">
+      <div class="lb-header">
+        <h2>Rangliste</h2>
+        <span style="font-size:12px;color:rgba(245,245,245,0.4)">Tage mit Ziel · Gesamt</span>
+      </div>
+      <div id="lbRows"><div class="loading">Lade...</div></div>
+    </div>
+    <div class="cal-wrap">
+      <h2>Streak-Kalender</h2>
+      <div class="cal-user-tabs">
+        <button class="cal-user-tab active" onclick="showCalUser('flo',this)">Flo</button>
+        <button class="cal-user-tab" onclick="showCalUser('patrick',this)">Patrick</button>
+        <button class="cal-user-tab" onclick="showCalUser('dominik',this)">Dominik</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-legend">
+        <div class="cal-legend-item"><div class="cal-dot" style="background:#B1EC04"></div>Ziel erreicht (100+)</div>
+        <div class="cal-legend-item"><div class="cal-dot" style="background:rgba(251,179,20,0.4)"></div>Teilweise</div>
+        <div class="cal-legend-item"><div class="cal-dot" style="background:rgba(238,28,37,0.3)"></div>Kein Eintrag</div>
+        <div class="cal-legend-item"><div class="cal-dot" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1)"></div>Noch nicht</div>
+      </div>
+    </div>
+    <div id="tagessiegerWrap" class="tagessieger-wrap" style="display:none">
+      <img id="tagessiegerAvatar" class="tagessieger-avatar" src=""/>
+      <div>
+        <h3>⚡ Tagessieger</h3>
+        <div id="tagessiegerText" style="font-size:13px;color:rgba(245,245,245,0.7)"></div>
+      </div>
+    </div>
+
+    <div id="comebackWrap" class="comeback-wrap" style="display:none">
+      <h3>📊 Aufholjagd</h3>
+      <div id="comebackRows"></div>
+    </div>
+
+    <div id="nemesisWrap" class="nemesis-wrap" style="display:none">
+      <h3>⚔️ Nemesis</h3>
+      <img id="nemesisAvatar" class="nemesis-avatar" src=""/>
+      <div class="nemesis-info" id="nemesisInfo"></div>
+    </div>
+
+    <div class="records-grid">
+      <div class="record-card">
+        <div class="r-icon">🏋️</div>
+        <div class="r-label">Größter Satz</div>
+        <div class="r-value" id="recLargestSet">—</div>
+        <div class="r-holder" id="recLargestHolder"></div>
+      </div>
+      <div class="record-card">
+        <div class="r-icon">📅</div>
+        <div class="r-label">Bester Tag</div>
+        <div class="r-value" id="recBestDay">—</div>
+        <div class="r-holder" id="recBestHolder"></div>
+      </div>
+      <div class="record-card">
+        <div class="r-icon">🔥</div>
+        <div class="r-label">Längster Streak</div>
+        <div class="r-value" id="recBestStreak">—</div>
+        <div class="r-holder" id="recStreakHolder"></div>
+      </div>
+    </div>
+
+    <div class="milestone-wrap">
+      <h2>🏃 Meilenstein-Marathon</h2>
+      <div class="milestone-current">
+        <div class="big" id="milestoneTotal">0</div>
+        <div class="sub">Liegestütze gesamt (alle 3)</div>
+      </div>
+      <div class="milestone-track">
+        <div class="milestone-fill" id="milestoneFill" style="width:0%"></div>
+        <div id="milestoneMarkers"></div>
+      </div>
+      <div class="milestone-labels">
+        <span>0</span><span>2.500</span><span>5.000</span><span>7.500</span><span>10.000</span>
+      </div>
+      <div class="milestone-next" id="milestoneNext"></div>
+    </div>
+
+    <div class="user-detail-wrap">
+      <h2>Satz-Details</h2>
+      <div class="user-detail-tabs">
+        <button class="user-detail-tab active" onclick="showDetailUser('flo',this)">Flo</button>
+        <button class="user-detail-tab" onclick="showDetailUser('patrick',this)">Patrick</button>
+        <button class="user-detail-tab" onclick="showDetailUser('dominik',this)">Dominik</button>
+      </div>
+      <div class="detail-day-list" id="detailDayList"><div class="loading">Lade...</div></div>
+    </div>
+  </div>
+</main>
+<div id="winnerScreen">
+  <div class="winner-wrap">
+    <div class="winner-title">CHALLENGE<br>COMPLETE</div>
+    <div class="winner-sub">365 Tage · 100 Liegestütze täglich</div>
+    <div class="winner-podium" id="winnerPodium"></div>
+    <div class="winner-stats" id="winnerStats"></div>
+    <div class="winner-msg">
+      <h3>🏆 An alle drei</h3>
+      <p id="winnerText"></p>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
 <script>
 const USERS = {
   flo:    {name:'Flo',    color:'#C62CB0', initials:'FL', bg:'rgba(198,44,176,0.3)'},
@@ -493,7 +881,7 @@ function showWinnerScreen(sorted,stats){
   }).join('');
   const winner=USERS[sorted[0]];
   document.getElementById('winnerText').innerHTML=
-    '<strong style="color:'+winner.color+'">🎉 '+winner.name+' gewinnt die PUSH365 Challenge!</strong><br><br>'
+    '<strong style="color:'+winner.color+'">🎉 '+winner.name+' gewinnt die PUSH365 Challenge!</b><br><br>'
     +'Was ihr drei in 365 Tagen geleistet habt, verdient echten Respekt. Täglich 100 Liegestütze durchzuziehen — das ist keine Selbstverständlichkeit. Jeder von euch hat bewiesen, dass Disziplin und Wille über ein ganzes Jahr aufrechtzuerhalten ist.<br><br>'
     +'Ob erster, zweiter oder dritter Platz — ihr alle habt gewonnen. Nicht nur an Kraft, sondern an Charakter. Diese Challenge hat euch geformt, und das zeigt sich nicht nur in den Zahlen.<br><br>'
     +'Auf euch drei. 💪';
@@ -832,7 +1220,7 @@ function renderGamification(stats, sorted, elapsed) {
     document.getElementById('tagessiegerWrap').style.display='flex';
     document.getElementById('tagessiegerAvatar').src = '/'+todayLeader+'.png';
     document.getElementById('tagessiegerText').innerHTML =
-      '<strong style="color:var(--yellow)">'+USERS[todayLeader].name+'</strong> führt heute mit '+todayMax+' Liegestützen'
+      '<strong style="color:var(--yellow)">'+USERS[todayLeader].name+'</b> führt heute mit '+todayMax+' Liegestützen'
       +(todayMax>=100?' — Tagesziel erreicht! ✓':'  — '+Math.max(0,100-todayMax)+' fehlen noch');
   } else {
     document.getElementById('tagessiegerWrap').style.display='none';
@@ -868,7 +1256,7 @@ function renderGamification(stats, sorted, elapsed) {
       document.getElementById('nemesisWrap').style.display='flex';
       document.getElementById('nemesisAvatar').src = '/'+second+'.png';
       document.getElementById('nemesisInfo').innerHTML =
-        '<strong>'+USERS[second].name+'</strong> ist nur <strong style="color:var(--red)">'+gap+' Tag'+(gap!==1?'e':'')+' hinter '+USERS[leader].name+'</strong>'
+        '<b>'+USERS[second].name+'</b> ist nur <strong style="color:var(--red)">'+gap+' Tag'+(gap!==1?'e':'')+' hinter '+USERS[leader].name+'</b>'
         +' — '+stats[second].total.toLocaleString('de')+' vs '+stats[leader].total.toLocaleString('de')+' Liegestütze total. '
         +(gap===0?'Gleichstand! Wer bricht heute zuerst 100?':'Noch aufholbar — aber die Zeit läuft.');
     } else {
@@ -920,8 +1308,8 @@ function renderGamification(stats, sorted, elapsed) {
   if(next) {
     const remaining = next.val - grandTotal;
     document.getElementById('milestoneNext').innerHTML =
-      'Noch <strong>'+remaining.toLocaleString('de')+' Liegestütze</strong> bis zum nächsten Meilenstein: '+next.icon+' '+next.desc;
+      'Noch <b>'+remaining.toLocaleString('de')+'</b> Liegestütze bis zum nächsten Meilenstein: '+next.icon+' '+next.desc;
   } else {
-    document.getElementById('milestoneNext').innerHTML = '🏆 <strong>Marathon abgeschlossen!</strong> Ihr seid Legenden.';
+    document.getElementById('milestoneNext').innerHTML = '🏆 Marathon abgeschlossen! Ihr seid Legenden.';
   }
 }
