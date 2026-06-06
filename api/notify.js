@@ -163,5 +163,6 @@ function buildUserPrompt(time, stats, elapsed) {
   const statsText = sorted.map(([uid, s]) =>
     `${names[uid]}: ${s.todayTotal} Liegestütze heute | ${s.goalDays} Tage Ziel erreicht | ${s.total} gesamt`
   ).join('\n');
-  return `Tag ${elapsed + 1} der Challenge. Aktuelle Stats:\n\n${statsText}\n\nSchreibe jetzt die ${time === 'midday' ? 'Mittags' : 'Abend'}-Nachricht für die Gruppe.`;
+  const berlinTime = new Date().toLocaleTimeString('de-DE', {timeZone:'Europe/Berlin', hour:'2-digit', minute:'2-digit'});
+  return `Tag ${elapsed + 1} der Challenge. Aktuelle Uhrzeit in Berlin: ${berlinTime}.\n\n${statsText}\n\nSchreibe jetzt die ${time === 'midday' ? 'Mittags' : 'Abend'}-Nachricht für die Gruppe.`;
 }
