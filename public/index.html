@@ -724,7 +724,7 @@ async function renderDashboard() {
   var lbHtml = '';
   for(var i=0; i<sorted.length; i++) {
     var uid = sorted[i]; var s = stats[uid]; var u = USERS[uid];
-    var medal = ['🥇','🥈','🥉'][i];
+    var medal = ['🥇','🥈','🥉','4️⃣'][i];
     var consistency = Math.round(s.goalDays / Math.max(1,elapsed+1) * 100);
     var badges = getBadges(stats, uid);
     var badgeHtml = '';
