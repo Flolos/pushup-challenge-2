@@ -283,7 +283,7 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
     </div>
     <div class="milestone-wrap">
       <h2>🏃 Meilenstein-Marathon</h2>
-      <div class="milestone-current"><div class="big" id="milestoneTotal">0</div><div class="sub">Liegestütze gesamt (alle 3)</div></div>
+      <div class="milestone-current"><div class="big" id="milestoneTotal">0</div><div class="sub">Liegestütze gesamt (alle 4)</div></div>
       <div class="milestone-track"><div class="milestone-fill" id="milestoneFill" style="width:0%"></div><div id="milestoneMarkers"></div></div>
       <div class="milestone-labels"><span>0</span><span>2.500</span><span>5.000</span><span>7.500</span><span>10.000</span></div>
       <div class="milestone-next" id="milestoneNext"></div>
@@ -453,7 +453,7 @@ function checkWinner(allData) {
 function showWinnerScreen(sorted, stats) {
   document.getElementById('winnerScreen').style.display = 'block';
   startConfetti();
-  var medals = ['🥇','🥈','🥉'];
+  var medal = ['🥇','🥈','🥉','4️⃣'][i];
   var podiumOrder = [sorted[1], sorted[0], sorted[2]];
   var podiumClasses = ['podium-2','podium-1','podium-3'];
   var elapsed = daysSince(CHALLENGE_START);
@@ -712,7 +712,7 @@ async function renderDashboard() {
   document.getElementById('statsGrid').innerHTML =
     '<div class="stat-card"><div class="label">Gesamt-Liegestütze</div>'
     +'<div class="value" style="color:#C62CB0">'+grandTotal.toLocaleString('de')+'</div>'
-    +'<div class="sub">Alle 3 Teilnehmer</div></div>'
+    +'<div class="sub">Alle 4 Teilnehmer</div></div>'
     +'<div class="stat-card"><div class="label">Führend</div>'
     +'<div class="value" style="color:#FBB314">'+USERS[sorted[0]].name+'</div>'
     +'<div class="sub">'+stats[sorted[0]].goalDays+' Tage Ziel erreicht</div></div>'
