@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PUSH365 Challenge</title>
+<title>PUSH365 Challenge — SAMen</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2303020C'/%3E%3Ctext x='32' y='46' font-size='38' text-anchor='middle' fill='%23C62CB0'%3E%F0%9F%92%AA%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -200,11 +200,14 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
   <div class="user-pill selected" onclick="selectUser('flo')" id="pill-flo">
     <img src="/flo.png" class="uavatar"/><span>Flo</span>
   </div>
-  <div class="user-pill" onclick="selectUser('patrick')" id="pill-patrick">
-    <img src="/patrick.png" class="uavatar"/><span>Patrick</span>
+  <div class="user-pill" onclick="selectUser('max')" id="pill-max">
+    <img src="/Max.png" class="uavatar"/><span>Max</span>
   </div>
-  <div class="user-pill" onclick="selectUser('dominik')" id="pill-dominik">
-    <img src="/dominik.png" class="uavatar"/><span>Dominik</span>
+  <div class="user-pill" onclick="selectUser('andy')" id="pill-andy">
+    <img src="/Andy.png" class="uavatar"/><span>Andy</span>
+  </div>
+  <div class="user-pill" onclick="selectUser('sandro')" id="pill-sandro">
+    <img src="/Sandro.png" class="uavatar"/><span>Sandro</span>
   </div>
 </div>
 <main>
@@ -255,7 +258,7 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
     </div>
   </div>
   <div id="tab-dashboard" style="display:none">
-    <p class="section-label">Gesamtübersicht · 365-Tage-Challenge ab 04.06.2026</p>
+    <p class="section-label">Gesamtübersicht · 365-Tage-Challenge ab 08.06.2026</p>
     <div class="dashboard-grid" id="statsGrid"><div class="loading">Lade Daten...</div></div>
     <div class="leaderboard">
       <div class="lb-header"><h2>Rangliste</h2><span style="font-size:12px;color:rgba(245,245,245,0.4)">Tage mit Ziel · Gesamt</span></div>
@@ -289,8 +292,9 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
       <h2>Streak-Kalender</h2>
       <div class="cal-user-tabs">
         <button class="cal-user-tab active" onclick="showCalUser('flo',this)">Flo</button>
-        <button class="cal-user-tab" onclick="showCalUser('patrick',this)">Patrick</button>
-        <button class="cal-user-tab" onclick="showCalUser('dominik',this)">Dominik</button>
+        <button class="cal-user-tab" onclick="showCalUser('max',this)">Max</button>
+        <button class="cal-user-tab" onclick="showCalUser('andy',this)">Andy</button>
+        <button class="cal-user-tab" onclick="showCalUser('sandro',this)">Sandro</button>
       </div>
       <div class="cal-grid" id="calGrid"></div>
       <div class="cal-legend">
@@ -304,8 +308,9 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
       <h2>Satz-Details</h2>
       <div class="user-detail-tabs">
         <button class="user-detail-tab active" onclick="showDetailUser('flo',this)">Flo</button>
-        <button class="user-detail-tab" onclick="showDetailUser('patrick',this)">Patrick</button>
-        <button class="user-detail-tab" onclick="showDetailUser('dominik',this)">Dominik</button>
+        <button class="user-detail-tab" onclick="showDetailUser('max',this)">Max</button>
+        <button class="user-detail-tab" onclick="showDetailUser('andy',this)">Andy</button>
+        <button class="user-detail-tab" onclick="showDetailUser('sandro',this)">Sandro</button>
       </div>
       <div class="detail-day-list" id="detailDayList"><div class="loading">Lade...</div></div>
     </div>
@@ -325,11 +330,12 @@ main{padding:1.5rem 2rem 4rem;max-width:900px;margin:0 auto}
 <script>
 var USERS = {
   flo:    {name:'Flo',    color:'#C62CB0', initials:'FL', bg:'rgba(198,44,176,0.3)'},
-  patrick:{name:'Patrick',color:'#FBB314', initials:'PA', bg:'rgba(251,179,20,0.3)'},
-  dominik:{name:'Dominik',color:'#B1EC04', initials:'DO', bg:'rgba(177,236,4,0.3)'}
+  max:    {name:'Max',    color:'#FBB314', initials:'MA', bg:'rgba(251,179,20,0.3)'},
+  andy:   {name:'Andy',   color:'#00D4FF', initials:'AN', bg:'rgba(0,212,255,0.3)'},
+  sandro: {name:'Sandro', color:'#B1EC04', initials:'SA', bg:'rgba(177,236,4,0.3)'}
 };
 var GOAL = 100;
-var CHALLENGE_START = new Date('2026-06-04');
+var CHALLENGE_START = new Date('2026-06-08');
 var CHALLENGE_DAYS = 365;
 var NOTIF_HOUR = 18;
 var MILESTONES = [
@@ -356,7 +362,7 @@ var pendingPhotoIdx = null;
 
 (function(){
   var p = window.location.pathname.replace('/','').toLowerCase();
-  if(p==='flo'||p==='patrick'||p==='dominik') currentUser = p;
+  if(p==='flo'||p==='max'||p==='andy'||p==='sandro') currentUser = p;
 })();
 
 function today() {
@@ -395,9 +401,9 @@ async function saveUserDay(uid, dateStr, sets) {
 
 function calcStats(allData) {
   var stats = {}; var td = today();
-  var uids = ['flo','patrick','dominik'];
+  var uids = ['flo','max','andy','sandro'];
   for(var i=0; i<uids.length; i++) {
-    var uid = uids[i]; var udata = allData[uid]||{};
+    var uid = uids[i]; var udata = (allData[uid])||{};
     var total=0, goalDays=0, bestStreak=0, cur=0, todayTotal=0;
     var elapsed = daysSince(CHALLENGE_START);
     for(var j=0; j<=elapsed; j++) {
@@ -415,7 +421,7 @@ function calcStats(allData) {
   return stats;
 }
 function rankUsers(stats) {
-  return ['flo','patrick','dominik'].sort(function(a,b){
+  return ['flo','max','andy','sandro'].sort(function(a,b){
     if(stats[b].goalDays !== stats[a].goalDays) return stats[b].goalDays - stats[a].goalDays;
     return stats[b].total - stats[a].total;
   });
@@ -794,7 +800,7 @@ function renderGamification(stats, sorted, elapsed, grandTotal, allData) {
 
   // RECORDS
   var largestSet=0, largestHolder='', bestDay=0, bestDayHolder='', bestStreak=0, bestStreakHolder='';
-  var uids = ['flo','patrick','dominik'];
+  var uids = ['flo','max','andy','sandro'];
   for(var i=0; i<uids.length; i++) {
     var uid = uids[i]; var udata = (allData&&allData[uid])||{}; var s = stats[uid];
     if(s.bestStreak>bestStreak){ bestStreak=s.bestStreak; bestStreakHolder=USERS[uid].name; }
