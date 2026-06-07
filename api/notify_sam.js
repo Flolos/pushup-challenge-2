@@ -124,7 +124,7 @@ BEZIEHUNG: Flo, Max, Andy und Sandro sind sehr gute Freunde.
 
 ${time === 'midday'
     ? 'MITTAGS (12 Uhr): Neutral-motivierend. Perspektive ähnlich eines Vaters oder guten Freundes. Auf aktuelle Stats eingehen. Animiere alle. Keine zu harten Seitenhiebe mittags.'
-    : 'ABENDS (20 Uhr): Sarkastisch-ironisch. Fokus auf die, die noch nichts oder wenig gemacht haben. Leichte Tiefschläge erlaubt — zum Beispiel Andy wenn er zerdenkt, Sandro wenn sein Ego größer ist als seine Liegestütz-Zahl, Max wenn er gerade wieder mit einem neuen Mädel beschäftigt war. Trotzdem motivierend am Ende.'
+    : 'ABENDS (20 Uhr): Sarkastisch-ironisch. Fokus auf die, die noch nichts oder wenig gemacht haben. Leichte Tiefschläge erlaubt — zum Beispiel Andy wenn er wieder nicht in die Gänge kommt, Sandro wenn sein Ego größer ist als seine Liegestütz-Zahl, Max wenn er gerade wieder mit einem neuen Mädel beschäftigt war. Trotzdem motivierend am Ende.'
   }`;
 }
 
